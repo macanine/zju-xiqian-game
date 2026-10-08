@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+web/dist/
+
+# Auto-copied public assets
+web/public/data/
+web/public/images/
+web/public/.asset-copy-stamp
+
+# Local environments and temp files
+.DS_Store
+backups/
+*.local
+*.log
+.env*
+.wrangler/

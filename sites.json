@@ -1,0 +1,215 @@
+{
+  "_meta": {
+    "title": "浙江大学西迁史料数据集",
+    "subtitle": "文军长征 · 1937-1946",
+    "summary": "浙江大学西迁始于1937年抗日战争全面爆发，至1946年复员回杭，历时近十年，途经浙、赣、湘、粤、桂、黔六省，行程2600余公里。1986年彭真委员长视察浙大时，誉之为「文军长征」。",
+    "note": "coords 为近似坐标，仅供示意定位，正式使用前请自行校对。素材来源见 images/ 与项目 README。",
+    "generatedAt": "2026-10-04"
+  },
+  "sites": [
+    {
+      "id": "01-xitianmushan",
+      "order": 1,
+      "name": "西天目山·禅源寺",
+      "province": "浙江",
+      "place": "浙江省临安市西天目山禅源寺",
+      "coords": { "lat": 30.30, "lng": 119.43, "approximate": true },
+      "period": { "start": "1937-09", "end": "1937-11", "label": "1937年9月" },
+      "order_in_migration": "第一站",
+      "summary": "1937年9月，淞沪会战爆发后杭州告急。竺可桢校长决定将一年级新生迁往西天目山禅源寺上课，同时将附设的高级工业职业学校和农业职业学校迁往萧山县湘湖。",
+      "events": [
+        { "date": "1937-09-14", "text": "竺可桢与禅源寺方丈妙定商定租借寺院余屋" },
+        { "date": "1937-09-24", "text": "一年级新生迁至禅源寺" }
+      ],
+      "tags": ["禅源寺", "一年级新生", "竺可桢"],
+      "images": ["images/01_xitianmushan_01_zenyuan_temple_gate_1937_autumn.png"]
+    },
+    {
+      "id": "02-jiande",
+      "order": 2,
+      "name": "建德",
+      "province": "浙江",
+      "place": "浙江省建德县梅城镇",
+      "coords": { "lat": 29.53, "lng": 119.51, "approximate": true },
+      "period": { "start": "1937-11", "end": "1937-12", "label": "1937年11月" },
+      "order_in_migration": "第二站",
+      "summary": "1937年11月5日，日军在距杭州仅100多公里的金山卫登陆，浙大决定迁校建德（今梅城镇）。11月11日起，师生分三批从江干码头乘船出发，于15日全部到达建德。",
+      "events": [
+        { "date": "1937-11-05", "text": "日军金山卫登陆，杭州告急，决定迁校建德" },
+        { "date": "1937-11-11", "text": "师生分三批自江干码头乘船出发" },
+        { "date": "1937-11-15", "text": "师生全部到达建德" }
+      ],
+      "supplies": {
+        "books_instruments": "700余箱、共计200余吨",
+        "additional": "配合浙江图书馆迁走文澜阁《四库全书》139箱"
+      },
+      "highlights": ["创办《浙大日报》，每晚收听战况编印报纸，成为当地热销的时讯载体"],
+      "tags": ["江干码头", "四库全书", "浙大日报", "金山卫登陆"],
+      "images": [
+        "images/02_jiande_01_jianggan_wharf_departure_1937_nov.png",
+        "images/02_jiande_02_carrying_books_and_instruments.png",
+        "images/02_jiande_03_first_move_and_siku_protection.jpg"
+      ]
+    },
+    {
+      "id": "03-jian",
+      "order": 3,
+      "name": "吉安",
+      "province": "江西",
+      "place": "江西省吉安县",
+      "coords": { "lat": 27.11, "lng": 114.99, "approximate": true },
+      "period": { "start": "1937-12-24", "end": "1938-01-20", "label": "1937年12月—1938年1月" },
+      "order_in_migration": "第三站",
+      "summary": "1937年12月24日，即杭州沦陷之日，浙大开始撤离建德，经金华、玉山、樟树，行程752公里，于1938年1月20日抵达江西吉安。利用乡村师范和吉安中学放寒假期间，学校借屋上课。图书仪器则沿赣江等水路入赣。",
+      "route": ["金华", "玉山", "樟树", "吉安"],
+      "distance_km": 752,
+      "events": [
+        { "date": "1937-12-24", "text": "杭州沦陷当日，浙大开始撤离建德" },
+        { "date": "1938-01-20", "text": "抵达江西吉安" }
+      ],
+      "tags": ["金华", "玉山", "樟树", "赣江水路"],
+      "images": []
+    },
+    {
+      "id": "04-taihe",
+      "order": 4,
+      "name": "泰和",
+      "province": "江西",
+      "place": "江西省泰和县上田村",
+      "coords": { "lat": 26.79, "lng": 114.91, "approximate": true },
+      "period": { "start": "1938-02-18", "end": "1938-08", "label": "1938年2月—8月" },
+      "order_in_migration": "第四站",
+      "summary": "1938年2月中旬，吉安中学与乡村师范寒假期满，浙大师生于2月18日由水路和陆路迁移到泰和，临时校址设在上田村。",
+      "events": [
+        { "date": "1938-02-18", "text": "师生由水路和陆路迁抵泰和，临时校址设在上田村" },
+        { "date": "1938-07-23", "text": "竺可桢在桂林考察时接电报催其返回泰和；次子竺衡已因痢疾去世，年仅12岁" },
+        { "date": "1938-09-15", "text": "夫人张侠魂与次子竺衡葬于泰和松山" }
+      ],
+      "achievements": [
+        "修筑防洪大堤：浙大负责全部技术，历时2个月，全长7.5公里（约15华里）；师生自发捐款，发动上田、南圳、三溪等地群众参与。第二年即发洪水，当地人未遭水害，江边设「浙大码头」。",
+        "创设澄江学校",
+        "协助开辟沙村垦殖场"
+      ],
+      "disputed": ["防洪大堤长度另有「长约5华里」的记载，本数据集采用「约7.5公里（15华里）」"],
+      "tags": ["上田村", "防洪大堤", "澄江学校", "沙村垦殖场", "竺衡", "张侠魂"],
+      "images": [
+        "images/04_taihe_01_second_move_and_taihe_tragedy.jpg",
+        "images/04_taihe_02_zhu_kezhen_fountain_pen_and_taihe_history.jpg"
+      ]
+    },
+    {
+      "id": "05-yishan",
+      "order": 5,
+      "name": "宜山",
+      "province": "广西",
+      "place": "广西省宜山县（今河池市宜州区）",
+      "coords": { "lat": 24.50, "lng": 108.65, "approximate": true },
+      "period": { "start": "1938-08-13", "end": "1939-12", "label": "1938年8月—1939年12月" },
+      "order_in_migration": "第五站",
+      "summary": "1938年7月，赣北战事剧烈，浙大决定再迁广西宜山。8月13日起分批出发，图书仪器沿赣粤间水路入桂，师生循赣湘公路、湘桂铁路西行。11月1日，浙江大学在广西宜山开学上课。以原工读学校为总办公室，以文庙、湖广会馆为礼堂、教室，并在东门外标营搭盖草屋为临时教室和学生宿舍。",
+      "events": [
+        { "date": "1938-08-13", "text": "分批出发西行入桂" },
+        { "date": "1938-11-01", "text": "在宜山开学上课；竺可桢作《王阳明与大学生的典范》演讲，提出以「求是」二字为校训" },
+        { "date": "1938-11-19", "text": "校务会议正式通过，确定「求是」为浙江大学校训；同时请马一浮撰写校歌歌词" },
+        { "date": "1939-02", "text": "18架日机对宜山狂轰滥炸，标营校舍遭猛烈轰炸" }
+      ],
+      "achievements": ["正式确立「求是」校训", "请马一浮撰写校歌歌词"],
+      "tags": ["求是校训", "马一浮", "校歌", "标营", "文庙", "湖广会馆", "日机轰炸"],
+      "images": [
+        "images/05_yishan_01_third_move_and_air_raids.jpg",
+        "images/05_yishan_02_migration_bell_and_zhu_inscription.jpg",
+        "images/05_yishan_03_motto_and_anthem_ma_yifu.jpg",
+        "images/05_yishan_04_university_anthem_manuscript.jpg"
+      ]
+    },
+    {
+      "id": "06-zunyi-meitan",
+      "order": 6,
+      "name": "遵义·湄潭·永兴",
+      "province": "贵州",
+      "place": "贵州省遵义、湄潭、永兴",
+      "coords": { "lat": 27.73, "lng": 106.93, "approximate": true },
+      "period": { "start": "1939-12-13", "end": "1940-02", "label": "1939年12月—1940年2月" },
+      "order_in_migration": "第六站",
+      "summary": "1939年11月，日军在广西南部沿海登陆，学校又一次决定迁校，派人去云贵勘察校址，定为迁往贵州遵义、湄潭。12月13日启程，次年2月抵达黔北，在遵义、湄潭、永兴三地安定下来，坚持办学。",
+      "events": [
+        { "date": "1939-11", "text": "日军在广西南部沿海登陆，决定再迁" },
+        { "date": "1939-12-13", "text": "启程西行" },
+        { "date": "1940-02", "text": "抵达黔北，落脚遵义、湄潭、永兴三地" }
+      ],
+      "tags": ["遵义", "湄潭", "永兴", "黔北"],
+      "images": [
+        "images/06_guizhou_01_fourth_move_to_zunyi_meitan.jpg",
+        "images/06_guizhou_02_staff_students_and_meitan_history.jpg",
+        "images/06_guizhou_03_zunyi_history_wall.jpg",
+        "images/06_guizhou_04_student_records_and_gradebooks.jpg",
+        "images/06_guizhou_05_tung_oil_lamp_and_temple_tiles.jpg"
+      ]
+    },
+    {
+      "id": "07-guizhou-7years",
+      "order": 7,
+      "name": "贵州办学七年与复员回杭",
+      "province": "贵州",
+      "place": "贵州省遵义、湄潭、永兴",
+      "coords": { "lat": 27.77, "lng": 107.49, "approximate": true },
+      "period": { "start": "1940", "end": "1946", "label": "1940年—1946年" },
+      "order_in_migration": "终点站 / 复员",
+      "summary": "1940年初，浙江大学抵达贵州遵义、湄潭、永兴三地，在此办学七年。大一新生在湄潭永兴，大二以上老生在遵义。理学院、农学院和师范学院的理组先后迁到湄潭，湄潭文庙成为办公室和图书馆所在地。",
+      "achievements": [
+        "教学质量居西迁大学之首：当时教育部派人到全国各地巡视，认为浙大是所有西迁大学中教学秩序和教学质量最好的一所。",
+        "李约瑟誉之为「东方剑桥」：1944年4月、10月两次访问遵义和湄潭的浙大，将浙大与母校剑桥大学相提并论。",
+        "在浙大西迁至湄潭工作学习过的院士达50多位。"
+      ],
+      "quote": {
+        "text": "在重庆与贵阳之间叫遵义的小城里，可以找到浙江大学，是中国最好的四所大学之一。",
+        "speaker": "李约瑟",
+        "note": "出自其回国后所撰文章"
+      },
+      "events": [
+        { "date": "1940", "text": "抵达遵义、湄潭、永兴，开始为期七年的办学" },
+        { "date": "1944-04", "text": "李约瑟首次访问遵义、湄潭的浙大" },
+        { "date": "1944-10", "text": "李约瑟再次访问" },
+        { "date": "1945-10", "text": "龙泉分校师生率先启程回杭" },
+        { "date": "1945-11", "text": "龙泉分校在杭复课" },
+        { "date": "1946-05-07", "text": "遵义总校开始分批回杭，改遵义校址为留守处" },
+        { "date": "1946", "text": "秋，浙江大学全面复员杭州" }
+      ],
+      "student_count": { "after_return": 2171, "before_migration": 633 },
+      "tags": ["湄潭文庙", "永兴", "万寿宫", "江西会馆", "东方剑桥", "李约瑟", "复员东归", "龙泉分校"],
+      "images": [
+        "images/07_guizhou_01_jiangxi_guild_hall_wanshou_palace.jpg",
+        "images/07_guizhou_02_zunyi_campus_gate.jpg",
+        "images/07_guizhou_03_academicians_photo_wall.jpg",
+        "images/07_guizhou_04_migration_achievements.jpg",
+        "images/07_guizhou_05_campus_reconstruction_and_return.jpg"
+      ]
+    }
+  ],
+  "galleries": [
+    {
+      "id": "g-achievements-teachers",
+      "name": "办学成就与名师（专题，非迁校站点）",
+      "period": { "start": "1937", "end": "1946", "label": "西迁全程" },
+      "summary": "西迁办学成果、师资与人物专题：办学规模扩大、研究院所、聘请名师、竺可桢校长，以及「躲避轰炸的山洞课堂」场景复原。",
+      "facts": {
+        "colleges_1946": "文、理、工、农、医、法、师范共 7 个学院、26 个学系",
+        "research_institutes": [
+          { "name": "史地学部", "founded": "1939-08", "director": "张其昀" },
+          { "name": "数学部", "founded": "1940-08", "director": "苏步青" },
+          { "name": "化学工程学部", "founded": "1941-08", "director": "李寿恒" },
+          { "name": "生物学部", "founded": "1942-08", "director": "贝时璋" },
+          { "name": "农业经济学部", "founded": "1942-08", "director": "吴文晖" }
+        ],
+        "student_series": "展板列出 1937-1938 至 1945-1946 各学年在校生（613→1963）与毕业生（86→327）人数"
+      },
+      "images": [
+        { "path": "images/08_achievements_01_colleges_and_research_units.jpg", "caption": "办学规模扩大、研究院所一览、在校生与毕业生统计" },
+        { "path": "images/08_achievements_02_social_science_scholars.jpg", "caption": "浙大西迁时期的社科名家" },
+        { "path": "images/08_achievements_03_cave_classroom_scene.jpg", "caption": "躲避轰炸的山洞课堂（场景复原）" },
+        { "path": "images/08_achievements_04_national_zju_under_zhu.jpg", "caption": "竺可桢校长时期的国立浙江大学" },
+        { "path": "images/08_achievements_05_westward_migration_teachers_wall.jpg", "caption": "聘请名师（名师墙）" }
+      ]
+    }
+  ]
+}
