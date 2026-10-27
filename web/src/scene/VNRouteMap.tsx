@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactElement } from "react";
 import { assetUrl, imageCaption, type ContentBundle } from "../domain/content";
 import { sound } from "../domain/audio";
 import { WAYPOINTS, type WaypointStory } from "../domain/passport";
+import journeyAmbience from "../assets/illustrations/journey_ambience.jpg";
 
 export interface VNRouteMapProps {
   content: ContentBundle;
@@ -110,18 +111,18 @@ export function VNRouteMap({
       {/* Ancient Map Canvas Header */}
       <div className="vn-map-header">
         <div className="vn-map-title-group">
-          <span className="vn-map-seal-mark">長征</span>
+          <span className="vn-map-seal-mark">长征</span>
           <div>
-            <h2>國立浙江大學西遷行軍全圖</h2>
-            <p>一九三七至一九四六 · 歷時九年 · 涉五省 · 二千六百餘公里</p>
+            <h2>国立浙江大学西迁行军全图</h2>
+            <p>一九三七至一九四六 · 历时九年 · 涉五省 · 二千六百余公里</p>
           </div>
         </div>
         <div className="vn-map-header-actions">
           <button className="vn-map-passport-btn" onClick={onOpenPassport}>
-            📜 行軍文牒（{visitedWaypoints.size}/{WAYPOINTS.length} 手札）
+            📜 行军文牒（{visitedWaypoints.size}/{WAYPOINTS.length} 手札）
           </button>
           <button className="vn-map-archive-btn" onClick={onArchive}>
-            檢閱全部史料 ↗
+            检阅全部史料 ↗
           </button>
         </div>
       </div>
@@ -305,7 +306,7 @@ export function VNRouteMap({
                 }`}
                 style={{ left: `${coord.x}%`, top: `${coord.y}%` }}
                 onClick={() => handleSelectWaypoint(wp)}
-                title={`【駐地手記】${wp.title} · ${wp.bonus.label}（${isVisited ? "已探訪收錄" : "點擊探訪"}）`}
+                title={`【驻地手记】${wp.title} · ${wp.bonus.label}（${isVisited ? "已探访收录" : "点击探访"}）`}
               >
                 <div className="waypoint-pin">
                   <span className="waypoint-seal-char">{wp.sealChar}</span>
@@ -331,15 +332,15 @@ export function VNRouteMap({
             </div>
           ) : (
             <div className="dossier-no-photo">
-              <span className="seal-watermark">吉安</span>
-              <p>本段史料留檔文字詳實 · 影像待補</p>
+              <img className="dossier-ambience" src={journeyAmbience} alt="" />
+              <p>原始对话此段未附图 · 氛围插画</p>
             </div>
           )}
         </div>
 
         <div className="dossier-text-col">
           <div className="dossier-kicker">
-            <span>西遷史記 · 第 {inspectedIndex + 1} / {nodes.length} 站</span>
+            <span>西迁史记 · 第 {inspectedIndex + 1} / {nodes.length} 站</span>
             <span className="dossier-date">{inspectedNode.period.label}</span>
           </div>
           <h3>{inspectedNode.name}</h3>
@@ -361,7 +362,7 @@ export function VNRouteMap({
                   onEnterNode();
                 }}
               >
-                <span>{currentNode.isPrologue ? "啓程出發 · 進入序章" : "進入本站劇情"}</span>
+                <span>{currentNode.isPrologue ? "启程出发 · 进入序章" : "进入本站剧情"}</span>
                 <span className="btn-arrow">→</span>
               </button>
             ) : (
@@ -369,7 +370,7 @@ export function VNRouteMap({
                 className="vn-map-jump-btn"
                 onClick={() => handleInspect(currentNodeIndex)}
               >
-                返回當前行軍站（{currentNode.name}）
+                返回当前行军站（{currentNode.name}）
               </button>
             )}
           </div>
@@ -390,13 +391,13 @@ export function VNRouteMap({
                 <span className="wp-modal-seal">{activeWaypoint.sealChar}</span>
                 <div>
                   <h3>{activeWaypoint.title}</h3>
-                  <p>鄰近站點：{activeWaypoint.stationNear} · 沿途駐地探索手札</p>
+                  <p>邻近站点：{activeWaypoint.stationNear} · 沿途驻地探索手札</p>
                 </div>
               </div>
               <button
                 className="wp-modal-close-btn"
                 onClick={() => setActiveWaypoint(null)}
-                aria-label="關閉"
+                aria-label="关闭"
               >
                 ✕
               </button>
@@ -409,7 +410,7 @@ export function VNRouteMap({
 
               <div className="wp-modal-bonus-box">
                 <div className="bonus-pill">
-                  <span className="bonus-kicker">史料收穫：</span>
+                  <span className="bonus-kicker">史料收获：</span>
                   <strong>{activeWaypoint.bonus.label}</strong>
                   <i>{activeWaypoint.bonus.effect}</i>
                 </div>
@@ -419,7 +420,7 @@ export function VNRouteMap({
             <div className="wp-modal-footer">
               {visitedWaypoints.has(activeWaypoint.id) ? (
                 <div className="wp-modal-visited-state">
-                  <span>✓ 此篇手札已錄入《西遷通關路引文牒》</span>
+                  <span>✓ 此篇手札已录入《西迁通关路引文牒》</span>
                   <button
                     className="wp-modal-passport-link"
                     onClick={() => {
@@ -427,7 +428,7 @@ export function VNRouteMap({
                       onOpenPassport();
                     }}
                   >
-                    翻開文牒檢閱 ➔
+                    翻开文牒检阅 ➔
                   </button>
                 </div>
               ) : (
@@ -438,7 +439,7 @@ export function VNRouteMap({
                     onVisitWaypoint(activeWaypoint);
                   }}
                 >
-                  <span>探訪駐地 · 收錄手札（獲取物資）</span>
+                  <span>探访驻地 · 收录手札（获取物资）</span>
                   <span className="btn-arrow">✓</span>
                 </button>
               )}

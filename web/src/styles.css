@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Noto+Serif+TC:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap");
 
 /* =========================================================================
    ZJU WESTWARD JOURNEY - 2D HISTORICAL VISUAL NOVEL STYLES
@@ -32,7 +32,7 @@
   --jade-green: #3f5547;       /* 旧竹青 */
 
   /* --- 云端统一衬线字体（Google China CDN: Noto Serif SC / TC，不走本地字体） --- */
-  --font-serif: "Noto Serif SC", "Noto Serif TC", serif;
+  --font-serif: "Noto Serif SC", serif;
   --font-kaiti: var(--font-serif);
   --font-sans: var(--font-serif);
 
@@ -105,6 +105,9 @@ html, body, #app {
   position: absolute;
   inset: 0;
   background:
+    repeating-linear-gradient(0deg, rgba(89, 67, 43, 0.018) 0 1px, transparent 1px 5px),
+    radial-gradient(ellipse at 12% 18%, rgba(126, 89, 51, 0.11), transparent 26%),
+    radial-gradient(ellipse at 88% 78%, rgba(126, 89, 51, 0.10), transparent 30%),
     radial-gradient(circle at 50% 30%, #faf5ea 0%, #f1e7d2 70%, #e6d8bc 100%);
   opacity: 1;
 }
@@ -177,50 +180,35 @@ html, body, #app {
   opacity: 0.35;
 }
 
-/* 吉安等无图节点的水墨写意底图 */
+/* 无史料照片节点使用明确标注的氛围插画 */
 .vn-sketch-plate {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at 50% 50%, #f6eedd 0%, #ece0c5 75%, #dbcbab 100%);
+  background-color: #e5d7bb;
+  background-size: cover;
+  background-position: center 44%;
+  isolation: isolate;
 }
 
-.vn-sketch-calligraphy {
+.vn-sketch-plate::after {
+  content: "";
   position: absolute;
-  right: 12%;
-  top: 18%;
-  display: flex;
-  gap: 1.2rem;
-  writing-mode: vertical-rl;
-  font-family: var(--font-serif);
-  color: rgba(90, 70, 50, 0.2);
-  font-size: 2.4rem;
-  letter-spacing: 0.8rem;
-  user-select: none;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(245, 238, 220, 0.08), transparent 52%),
+    linear-gradient(to bottom, rgba(245, 238, 220, 0.04), transparent 45%, rgba(245, 238, 220, 0.55));
 }
 
-.vn-sketch-watermark {
-  text-align: center;
-  color: var(--ink-muted);
-}
-
-.vn-sketch-watermark span {
-  display: inline-block;
-  font-size: 5rem;
-  font-family: var(--font-serif);
-  border: 4px solid rgba(168, 46, 36, 0.35);
-  color: rgba(168, 46, 36, 0.4);
-  padding: 0.4rem 1.4rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-}
-
-.vn-sketch-watermark p {
-  font-size: 1.15rem;
-  letter-spacing: 0.25rem;
+.vn-sketch-caption {
+  position: absolute;
+  top: 5.2rem;
+  left: 2rem;
+  padding: 0.3rem 0.6rem;
+  border-left: 2px solid var(--vermilion);
+  background: rgba(248, 242, 228, 0.82);
+  box-shadow: var(--shadow-paper);
+  font-size: 0.78rem;
+  letter-spacing: 0.06rem;
   color: var(--ink-muted);
 }
 
@@ -229,13 +217,16 @@ html, body, #app {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(245, 238, 220, 0.15) 0%, rgba(245, 238, 220, 0.4) 60%, rgba(245, 238, 220, 0.85) 100%);
+    linear-gradient(to bottom, rgba(245, 238, 220, 0.04) 0%, rgba(245, 238, 220, 0.08) 48%, rgba(245, 238, 220, 0.66) 100%);
 }
 
 .vn-texture-overlay {
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 100px rgba(70, 48, 28, 0.25);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(68, 48, 30, 0.018) 7px 8px),
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(68, 48, 30, 0.012) 11px 12px);
+  box-shadow: inset 0 0 110px rgba(70, 48, 28, 0.28);
 }
 
 /* 历史原图题跋印章 */
@@ -264,7 +255,6 @@ html, body, #app {
 .seal-inner span,
 .seal-large,
 .seal-large span,
-.badge-seal,
 .chip-seal,
 .res-seal,
 .res-chip-seal,
@@ -282,7 +272,6 @@ html, body, #app {
 .block-seal,
 .epilogue-stamp,
 .caption-seal,
-.vn-loading-seal,
 .vn-error-seal,
 .res-delta-chip,
 .res-flag-chip,
@@ -602,6 +591,23 @@ html, body, #app {
   text-align: center;
 }
 
+.vn-book-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(17deg, transparent 0 13px, rgba(72, 52, 32, 0.014) 13px 14px),
+    radial-gradient(ellipse at 2% 8%, rgba(108, 76, 43, 0.13), transparent 24%),
+    radial-gradient(ellipse at 98% 94%, rgba(108, 76, 43, 0.12), transparent 25%);
+  box-shadow: inset 0 0 36px rgba(69, 47, 26, 0.16);
+}
+
+.vn-cover-content {
+  position: relative;
+  z-index: 1;
+}
+
 /* 线装书侧缝针线装饰 */
 .vn-book-stitch {
   position: absolute;
@@ -642,23 +648,6 @@ html, body, #app {
   background: rgba(255, 252, 244, 0.85);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
-}
-
-.vn-cover-title-seal {
-  position: absolute;
-  top: -0.9rem;
-  right: -0.9rem;
-  width: 2rem;
-  height: 2rem;
-  background: var(--vermilion);
-  color: #fff;
-  border-radius: 2px;
-  font-size: 0.8rem;
-  font-family: var(--font-serif);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(168, 46, 36, 0.4);
 }
 
 .vn-cover-title-panel h1 {
@@ -1064,30 +1053,35 @@ html, body, #app {
 }
 
 .dossier-no-photo {
-  height: 140px;
-  background: var(--paper-deep);
-  border: 1px dashed var(--paper-edge);
+  height: 160px;
+  background: #eadfc9;
+  border: 1px solid var(--paper-edge);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: var(--ink-muted);
   text-align: center;
-  padding: 1rem;
+  padding: 0.55rem;
+  overflow: hidden;
+  box-shadow: inset 0 0 22px rgba(78, 54, 32, 0.14);
 }
 
-.seal-watermark {
-  font-size: 1.8rem;
-  font-family: var(--font-serif);
-  border: 2px solid rgba(168, 46, 36, 0.3);
-  color: rgba(168, 46, 36, 0.4);
-  padding: 0.1rem 0.6rem;
-  border-radius: 3px;
-  margin-bottom: 0.4rem;
+.dossier-ambience {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  object-fit: cover;
+  object-position: center 43%;
+  border: 1px solid rgba(107, 78, 47, 0.35);
+  filter: sepia(0.16) saturate(0.84);
 }
 
 .dossier-no-photo p {
-  font-size: 0.75rem;
+  padding-top: 0.3rem;
+  font-size: 0.68rem;
+  line-height: 1.25;
 }
 
 .dossier-text-col {
@@ -1283,15 +1277,16 @@ html, body, #app {
   z-index: 30;
   width: 100%;
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(253, 249, 240, 0.97) 0%, rgba(247, 239, 222, 0.97) 100%);
-  border: 2px solid var(--paper-edge);
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(45, 32, 18, 0.22), 0 2px 6px rgba(0, 0, 0, 0.08);
+    repeating-linear-gradient(0deg, rgba(89, 67, 43, 0.016) 0 1px, transparent 1px 6px),
+    radial-gradient(ellipse at 50% 20%, rgba(253, 249, 240, 0.98) 0%, rgba(242, 232, 212, 0.98) 100%);
+  border: 1px solid #bdab87;
+  border-radius: 2px;
+  box-shadow: 0 12px 34px rgba(45, 32, 18, 0.24), inset 0 0 30px rgba(117, 87, 52, 0.08);
   padding: 1.6rem 2rem 1.4rem;
   cursor: pointer;
   transition: opacity 0.25s ease, transform 0.25s ease;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .vn-dialogue-box.is-hidden {
@@ -1310,13 +1305,22 @@ html, body, #app {
   margin-bottom: 1rem;
 }
 
-/* 角色素描头像徽标 */
+.vn-speaker-badge.speaker-theme-default {
+  padding-left: 0.15rem;
+}
+
+/* 头像只渲染图像素材；禁止在头像中放置文字印章。 */
 .speaker-avatar-wrap {
   position: relative;
-  width: 2.7rem;
-  height: 2.7rem;
+  width: 3rem;
+  height: 3rem;
   flex-shrink: 0;
   border-radius: 50%;
+  overflow: hidden;
+  padding: 2px;
+  border: 1px solid rgba(112, 82, 49, 0.48);
+  background: #e4d6ba;
+  box-shadow: 0 2px 8px rgba(51, 37, 22, 0.2);
 }
 
 .speaker-avatar-img {
@@ -1325,36 +1329,13 @@ html, body, #app {
   border-radius: 50%;
   object-fit: cover;
   display: block;
-  border: 2px solid var(--paper-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(112, 82, 49, 0.22);
   background: #f4ecdc;
+  filter: sepia(0.12) saturate(0.82) contrast(1.02);
 }
 
 .speaker-avatar-wrap .badge-seal {
-  position: absolute;
-  bottom: -0.2rem;
-  right: -0.25rem;
-  width: 1.15rem;
-  height: 1.15rem;
-  font-size: 0.65rem;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.badge-seal {
-  width: 2.2rem;
-  height: 2.2rem;
-  background: var(--vermilion);
-  color: #fff;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(168, 46, 36, 0.35);
-  flex-shrink: 0;
+  display: none !important;
 }
 
 .badge-names {
@@ -1379,96 +1360,61 @@ html, body, #app {
    ========================================================================= */
 /* 1. 竺可桢（校长）：朱砂御红 + 细金线边框 */
 .speaker-theme-zhu .speaker-avatar-img {
-  border-color: #d4af37;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
-}
-.speaker-theme-zhu .badge-seal {
-  background: #9e2a22 !important;
-  color: #fff !important;
-  border: 1.5px solid #d4af37 !important;
-  box-shadow: 0 0 6px rgba(212, 175, 55, 0.5) !important;
+  border-color: #98734b;
 }
 .speaker-theme-zhu .speaker-name {
   color: #9e2a22;
 }
 .speaker-theme-zhu .badge-names {
-  border-left: 2.5px solid #d4af37;
+  border-left: 2px solid #98734b;
   padding-left: 0.5rem;
 }
 
 /* 2. 沈砚（工学院）：青铜玄墨 + 哑光古铜 */
 .speaker-theme-shen .speaker-avatar-img {
-  border-color: #a37c44;
-  box-shadow: 0 0 8px rgba(163, 124, 68, 0.4);
-}
-.speaker-theme-shen .badge-seal {
-  background: #252b30 !important;
-  color: #e8d8c3 !important;
-  border: 1.5px solid #a37c44 !important;
-  box-shadow: 0 0 6px rgba(163, 124, 68, 0.4) !important;
+  border-color: #827056;
 }
 .speaker-theme-shen .speaker-name {
   color: #2b333a;
 }
 .speaker-theme-shen .badge-names {
-  border-left: 2.5px solid #a37c44;
+  border-left: 2px solid #827056;
   padding-left: 0.5rem;
 }
 
 /* 3. 周晚晴（文学院）：远山黛青 + 牙白衬底 */
 .speaker-theme-zhou .speaker-avatar-img {
-  border-color: #5a8899;
-  box-shadow: 0 0 8px rgba(90, 136, 153, 0.35);
-}
-.speaker-theme-zhou .badge-seal {
-  background: #285466 !important;
-  color: #faf7ee !important;
-  border: 1.5px solid #5a8899 !important;
-  box-shadow: 0 0 6px rgba(40, 84, 102, 0.4) !important;
+  border-color: #657c79;
 }
 .speaker-theme-zhou .speaker-name {
   color: #244d5c;
 }
 .speaker-theme-zhou .badge-names {
-  border-left: 2.5px solid #5a8899;
+  border-left: 2px solid #657c79;
   padding-left: 0.5rem;
 }
 
 /* 4. 老戚（校工技师）：苍赭黄土 + 夯土陶红 */
 .speaker-theme-qi .speaker-avatar-img {
-  border-color: #b36336;
-  box-shadow: 0 0 8px rgba(179, 99, 54, 0.4);
-}
-.speaker-theme-qi .badge-seal {
-  background: #7d4422 !important;
-  color: #fbf5eb !important;
-  border: 1.5px solid #b36336 !important;
-  box-shadow: 0 0 6px rgba(179, 99, 54, 0.4) !important;
+  border-color: #9a684b;
 }
 .speaker-theme-qi .speaker-name {
   color: #7d4422;
 }
 .speaker-theme-qi .badge-names {
-  border-left: 2.5px solid #b36336;
+  border-left: 2px solid #9a684b;
   padding-left: 0.5rem;
 }
 
 /* 5. 程小雨（农学院）：翠竹青绿 + 嫩芽碧色 */
 .speaker-theme-cheng .speaker-avatar-img {
-  border-color: #4aa86c;
-  box-shadow: 0 0 8px rgba(74, 168, 108, 0.4);
-}
-.speaker-theme-cheng .badge-seal {
-  background: #28633e !important;
-  color: #f5fcf7 !important;
-  border: 1.5px solid #4aa86c !important;
-  box-shadow: 0 0 6px rgba(74, 168, 108, 0.4) !important;
+  border-color: #687a57;
 }
 .speaker-theme-cheng .speaker-name {
   color: #225736;
 }
 .speaker-theme-cheng .badge-names {
-  border-left: 2.5px solid #4aa86c;
+  border-left: 2px solid #687a57;
   padding-left: 0.5rem;
 }
 
@@ -1961,14 +1907,104 @@ html, body, #app {
   color: var(--ink-muted);
 }
 
-.backlog-empty span {
-  font-size: 2.2rem;
+.backlog-empty-illustration {
+  display: block;
+  width: min(15rem, 78%);
+  height: 6.5rem;
+  margin: 0 auto 0.9rem;
+  object-fit: cover;
+  object-position: center 42%;
+  border: 1px solid var(--paper-edge);
+  box-shadow: var(--shadow-paper);
+  filter: sepia(0.18) saturate(0.8);
+  opacity: 0.92;
+}
+
+.backlog-empty p {
+  font-size: 0.95rem;
+  letter-spacing: 0.04rem;
+}
+
+.vn-sketch-caption {
+  max-width: calc(100vw - 2rem);
+}
+
+/* Loading ornament is a brush-ink circle, never a text seal or avatar. */
+.vn-loading-ornament {
+  position: relative;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.22rem;
+}
+
+.vn-loading-ornament::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(112, 82, 49, 0.5);
+  border-top-color: var(--vermilion);
+  border-radius: 50%;
+  animation: loadingInkTurn 3.6s linear infinite;
+}
+
+.vn-loading-ornament span {
+  width: 2px;
+  height: 0.8rem;
+  background: var(--ink-muted);
+  opacity: 0.68;
+  transform: rotate(18deg);
+}
+
+.vn-loading-ornament span:nth-child(2) {
+  height: 1.1rem;
+  background: var(--vermilion);
+}
+
+.vn-loading-ornament span:nth-child(3) {
+  height: 0.62rem;
+}
+
+@keyframes loadingInkTurn {
+  to { transform: rotate(360deg); }
+}
+
+.vn-error-seal {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--vermilion);
+  color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
   font-family: var(--font-serif);
-  border: 2px solid rgba(168, 46, 36, 0.3);
-  color: rgba(168, 46, 36, 0.4);
-  padding: 0.2rem 0.8rem;
-  border-radius: 3px;
-  display: inline-block;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 4px 14px rgba(168, 46, 36, 0.35);
+}
+
+.backlog-empty-illustration {
+  border-radius: 2px;
+}
+
+.backlog-empty p {
+  color: var(--ink-muted);
+}
+
+.vn-backlog-body .backlog-empty {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.vn-backlog-body .backlog-empty-illustration {
+  height: 7.5rem;
+}
+
+.vn-backlog-body .backlog-empty p {
   margin-bottom: 0.6rem;
 }
 
@@ -2469,22 +2505,6 @@ html, body, #app {
   background: var(--paper-bg);
 }
 
-.vn-loading-seal,
-.vn-error-seal {
-  width: 3.5rem;
-  height: 3.5rem;
-  background: var(--vermilion);
-  color: #fff;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  font-family: var(--font-serif);
-  margin-bottom: 1.2rem;
-  box-shadow: 0 4px 14px rgba(168, 46, 36, 0.35);
-}
-
 .vn-loading-screen p {
   font-size: 1.1rem;
   color: var(--ink-secondary);
@@ -2728,20 +2748,6 @@ html, body, #app {
   .speaker-avatar-wrap {
     width: 2.3rem;
     height: 2.3rem;
-  }
-
-  .speaker-avatar-wrap .badge-seal {
-    width: 1rem;
-    height: 1rem;
-    font-size: 0.55rem;
-    bottom: -0.15rem;
-    right: -0.2rem;
-  }
-
-  .badge-seal {
-    width: 1.8rem;
-    height: 1.8rem;
-    font-size: 0.95rem;
   }
 
   .speaker-name {
@@ -4100,4 +4106,3 @@ html, body, #app {
     justify-content: center;
   }
 }
-

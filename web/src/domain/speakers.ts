@@ -3,6 +3,7 @@ import avatarShen from "../assets/avatars/avatar_shen.jpg";
 import avatarZhou from "../assets/avatars/avatar_zhou.jpg";
 import avatarQi from "../assets/avatars/avatar_qi.jpg";
 import avatarCheng from "../assets/avatars/avatar_cheng.jpg";
+import avatarNarrator from "../assets/avatars/avatar_narrator.jpg";
 
 export type CharacterId = "zhu" | "shen" | "zhou" | "qi" | "cheng" | "other";
 
@@ -12,7 +13,7 @@ export const CHARACTER_AVATARS: Record<CharacterId, string | undefined> = {
   zhou: avatarZhou,
   qi: avatarQi,
   cheng: avatarCheng,
-  other: undefined,
+  other: avatarNarrator,
 };
 
 export interface SpeakerInfo {
@@ -23,6 +24,17 @@ export interface SpeakerInfo {
   kind: "historical" | "fictional" | "narrator" | "urgent";
   characterId?: CharacterId;
   avatar?: string;
+  avatarAlt?: string;
+}
+
+function withIllustratedFallback(speaker: SpeakerInfo): SpeakerInfo {
+  if (speaker.avatar) return speaker;
+  return {
+    ...speaker,
+    characterId: speaker.characterId ?? "other",
+    avatar: CHARACTER_AVATARS.other,
+    avatarAlt: "匿名学子示意插画",
+  };
 }
 
 const SPEAKER_MAP: Record<string, SpeakerInfo> = {
@@ -198,15 +210,15 @@ const SPEAKER_MAP: Record<string, SpeakerInfo> = {
 
 export function getSpeakerInfo(eventId?: string, fallbackTitle?: string): SpeakerInfo {
   if (eventId && SPEAKER_MAP[eventId]) {
-    return SPEAKER_MAP[eventId];
+    return withIllustratedFallback(SPEAKER_MAP[eventId]);
   }
-  return {
+  return withIllustratedFallback({
     name: fallbackTitle || "西迁史记",
     badge: "求是纪事",
     role: "国立浙江大学西迁备忘录",
     seal: "浙大",
     kind: "narrator",
-  };
+  });
 }
 
 export function resolveDialogueSpeaker(name: string, role?: string): SpeakerInfo {
@@ -283,11 +295,11 @@ export function resolveDialogueSpeaker(name: string, role?: string): SpeakerInfo
       kind: "historical",
     };
   }
-  return {
+  return withIllustratedFallback({
     name,
     badge: "行军见闻",
     role: role || "亲历者述评",
     seal: name.slice(0, 1),
     kind: "narrator",
-  };
+  });
 }

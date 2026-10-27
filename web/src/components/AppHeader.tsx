@@ -28,18 +28,18 @@ export function AppHeader({
 }): ReactElement {
   return (
     <header className="vn-topbar">
-      {/* Primary Top Bar Row: Brand Title & Global Actions */}
+      {/* Top Bar: Brand Title & Global Actions */}
       <div className="vn-topbar-primary">
         <div className="vn-topbar-left">
           <button className="vn-brand-seal" onClick={onHome} aria-label="返回封面">
             <span className="seal-char">浙</span>
             <div className="seal-text">
-              <strong>文軍長征</strong>
+              <strong>文军长征</strong>
               <span>1937—1946</span>
             </div>
           </button>
           <div className="vn-current-station">
-            <span className="station-kicker">當前紀事</span>
+            <span className="station-kicker">当前纪事</span>
             <b className="station-name">{nodeName}</b>
           </div>
         </div>
@@ -56,21 +56,21 @@ export function AppHeader({
           <button
             className="vn-nav-button"
             onClick={onOpenPassport}
-            title="檢閱西遷行軍通關路引文牒（快捷鍵 P）"
+            title="检阅西迁行军通关路引文牒（快捷键 P）"
           >
             <span>📜</span> 文牒
           </button>
           <button className="vn-nav-button" onClick={onOpenBacklog}>
-            <span>📖</span> 手記
+            <span>📖</span> 手记
           </button>
           <button
             className={`vn-nav-button ${screen === "archive" ? "is-active" : ""}`}
             onClick={onArchive}
           >
-            <span>📂</span> 檔案
+            <span>📂</span> 档案
           </button>
           <button className="vn-nav-button" onClick={onHome}>
-            <span>↻</span> 歸途
+            <span>↻</span> 归途
           </button>
         </nav>
       </div>

@@ -206,7 +206,7 @@ describe("Visual Novel Narrative & Rules", () => {
 
     expect(isDecisionEvent(CONTENT_BUNDLE, "hz-01")).toBe(true);
     expect(isDecisionEvent(CONTENT_BUNDLE, "hz-02")).toBe(true);
-    expect(FLAG_LABELS["siku"]).toContain("文瀾");
+    expect(FLAG_LABELS["siku"]).toContain("文澜");
     expect(resourceLabels.supplies.seal).toBe("典");
   });
 });

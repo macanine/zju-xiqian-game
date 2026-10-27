@@ -1,5 +1,6 @@
 import { useEffect, type ReactElement } from "react";
 import { sound } from "../domain/audio";
+import journeyAmbience from "../assets/illustrations/journey_ambience.jpg";
 
 export interface LogEntry {
   stage: string;
@@ -48,8 +49,8 @@ export function VNBacklog({ logs, isOpen, onClose }: VNBacklogProps): ReactEleme
           <div className="backlog-title-wrap">
             <span className="backlog-seal">憶</span>
             <div>
-              <h3>西遷見聞手記 · 歷史存檔</h3>
-              <p>一紙一墨 · 一路走來的求是痕跡</p>
+              <h3>西迁见闻手记 · 历史存档</h3>
+              <p>一纸一墨 · 一路走来的求是痕迹</p>
             </div>
           </div>
           <button
@@ -67,8 +68,12 @@ export function VNBacklog({ logs, isOpen, onClose }: VNBacklogProps): ReactEleme
         <div className="vn-backlog-body">
           {logs.length === 0 ? (
             <div className="backlog-empty">
-              <span>求是</span>
-              <p>長征伊始，暫無更多筆錄……</p>
+              <img
+                className="backlog-empty-illustration"
+                src={journeyAmbience}
+                alt=""
+              />
+              <p>长征伊始，暂无更多笔录……</p>
             </div>
           ) : (
             logs.map((entry, idx) => (
@@ -80,7 +85,7 @@ export function VNBacklog({ logs, isOpen, onClose }: VNBacklogProps): ReactEleme
                 <div className="backlog-item-text">{entry.text}</div>
                 {entry.choice && (
                   <div className="backlog-item-choice">
-                    <span className="choice-tag">決策筆錄：</span>
+                    <span className="choice-tag">决策笔录：</span>
                     <b>{entry.choice}</b>
                     {entry.resolution && <span>（{entry.resolution}）</span>}
                   </div>
@@ -91,7 +96,7 @@ export function VNBacklog({ logs, isOpen, onClose }: VNBacklogProps): ReactEleme
         </div>
 
         <div className="vn-backlog-footer">
-          <span>點擊任意處或按 ESC 鍵收起手記</span>
+          <span>点击任意处或按 ESC 键收起手记</span>
         </div>
       </div>
     </div>

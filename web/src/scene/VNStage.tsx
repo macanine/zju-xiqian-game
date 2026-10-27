@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { assetUrl, imageCaption, type ContentBundle, type StoryNode } from "../domain/content";
+import journeyAmbience from "../assets/illustrations/journey_ambience.jpg";
 
 export interface VNStageProps {
   content: ContentBundle;
@@ -16,14 +17,21 @@ export function VNStage({
   screen,
   onViewImage,
 }: VNStageProps): ReactElement {
+  const isJianWithoutPhoto =
+    node.id === "03-jian" &&
+    !photoPath &&
+    node.images.length === 0 &&
+    !node.backgroundHint;
+
   // Determine suitable background image
   const resolvedPath = useMemo(() => {
+    if (isJianWithoutPhoto) return "";
     if (photoPath) return photoPath;
     if (node.images && node.images.length > 0) return node.images[0];
     if (node.backgroundHint) return node.backgroundHint;
     const yishanHero = content.storyline.nodes.find((item) => item.id === "05-yishan")?.images[0];
     return yishanHero || "";
-  }, [photoPath, node, content]);
+  }, [photoPath, node, content, isJianWithoutPhoto]);
 
   // Double-buffered cross-fade state for butter-smooth visual transitions
   const [currentPath, setCurrentPath] = useState(resolvedPath);
@@ -44,8 +52,6 @@ export function VNStage({
   }, [resolvedPath, currentPath]);
 
   const caption = currentPath ? imageCaption(currentPath, content) : "";
-  const isJianWithoutPhoto = node.id === "03-jian" && !currentPath;
-
   return (
     <div className={`vn-stage vn-stage-${screen}`} aria-hidden="true">
       {/* Parchment & Aged Paper Background Layer */}
@@ -79,14 +85,12 @@ export function VNStage({
             <div className="vn-photo-vignette" />
           </div>
         ) : (
-          <div className="vn-sketch-plate">
-            <div className="vn-sketch-calligraphy">
-              <span>贛江清流</span>
-              <span>白鷺夕照</span>
-            </div>
-            <div className="vn-sketch-watermark">
-              <span>吉安</span>
-              <p>白鷺洲書院 · 借舍弦誦</p>
+          <div
+            className="vn-sketch-plate"
+            style={{ backgroundImage: `url(${journeyAmbience})` }}
+          >
+            <div className="vn-sketch-caption">
+              吉安 · 氛围插画（非史料影像）
             </div>
           </div>
         )}

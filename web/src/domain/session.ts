@@ -9,12 +9,12 @@ import { initialResources, type Resources } from "./rules";
 
 export const FLAG_LABELS: Record<string, string> = {
   doubt: "求是存亡之思",
-  siku: "護持文瀾四庫",
-  dike: "築就浙大長堤",
-  memorial: "銘悼松山素車",
-  debate: "求是誠樸之辨",
-  anthem: "唱響大不自多",
-  cambridge: "見證東方劍橋",
+  siku: "护持文澜四库",
+  dike: "筑就浙大长堤",
+  memorial: "铭悼松山素车",
+  debate: "求是诚朴之辨",
+  anthem: "唱响大不自多",
+  cambridge: "见证东方剑桥",
 };
 
 export type Screen = "home" | "route" | "event" | "archive" | "ending";
@@ -43,10 +43,10 @@ export const resourceLabels: Record<
   keyof Resources,
   { name: string; seal: string }
 > = {
-  supplies: { name: "圖書儀器", seal: "典" },
-  ration: { name: "行軍口糧", seal: "糧" },
-  health: { name: "隊伍健康", seal: "體" },
-  morale: { name: "全校士氣", seal: "志" },
+  supplies: { name: "图书仪器", seal: "典" },
+  ration: { name: "行军口粮", seal: "粮" },
+  health: { name: "队伍健康", seal: "体" },
+  morale: { name: "全校士气", seal: "志" },
 };
 
 export const fallbackDecisionEventIds = new Set([

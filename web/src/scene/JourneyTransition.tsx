@@ -108,7 +108,7 @@ export function JourneyTransition({
       <div className="jt-scroll-card" onClick={(e) => e.stopPropagation()}>
         {/* Top March Banner */}
         <div className="jt-march-banner">
-          <span className="banner-kicker">國立浙江大學西遷征途 · 轉進紀事</span>
+          <span className="banner-kicker">国立浙江大学西迁征途 · 转进纪事</span>
           <span className="banner-period">{leg.period}</span>
         </div>
 
@@ -150,7 +150,7 @@ export function JourneyTransition({
 
         {/* Skip Tip */}
         <div className="jt-skip-tip" onClick={handleSkip}>
-          <span>點擊任意處或按任意鍵跳過行軍過場 ➔</span>
+          <span>点击任意处或按任意键跳过行军过场 ➔</span>
         </div>
       </div>
     </div>

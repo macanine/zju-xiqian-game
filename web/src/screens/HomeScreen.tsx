@@ -35,7 +35,7 @@ export function HomeScreen({
   return (
     <section className="vn-home-screen">
       <div className="vn-book-cover">
-        {/* Traditional Binding Thread Graphics */}
+          {/* 线装书缝线装饰 */}
         <div className="vn-book-stitch" aria-hidden="true">
           <span />
           <span />
@@ -45,21 +45,20 @@ export function HomeScreen({
 
         <div className="vn-cover-content">
           <div className="vn-cover-motto">
-            <span>國立浙江大學西遷校史紀事</span>
-            <span>中華民國二十六年 · 一九三七年秋</span>
+            <span>国立浙江大学西迁校史纪事</span>
+            <span>中华民国二十六年 · 一九三七年秋</span>
           </div>
 
           <div className="vn-cover-title-panel">
-            <div className="vn-cover-title-seal">求是</div>
-            <h1>文軍長征</h1>
+            <h1>文军长征</h1>
             <p className="vn-cover-sub">
-              在烽火漫卷與九年萬里流亡之間 · 守護求是火種的真實足跡
+              在烽火漫卷与九年万里流亡之间 · 守护求是火种的真实足迹
             </p>
           </div>
 
           <div className="vn-cover-quote">
-            <p>「大不自多 · 海納江河 · 唯學無際 · 際於天地」</p>
-            <span>— 竺可楨校長題辭 · 浙大校歌</span>
+            <p>「大不自多 · 海纳江河 · 唯学无际 · 际于天地」</p>
+            <span>— 竺可桢校长题辞 · 浙大校歌</span>
           </div>
 
           <div className="vn-cover-actions">
@@ -70,8 +69,8 @@ export function HomeScreen({
                 onStart();
               }}
             >
-              <span className="btn-seal">開卷</span>
-              <span>啓程入蜀黔 · 從杭州出發</span>
+              <span className="btn-seal">开卷</span>
+              <span>启程入蜀黔 · 从杭州出发</span>
               <span className="btn-arrow">→</span>
             </button>
             <button
@@ -81,18 +80,18 @@ export function HomeScreen({
                 onArchive();
               }}
             >
-              檢閱二十五張原始影像檔案
+              检阅二十五张原始影像档案
             </button>
           </div>
 
           <div className="vn-cover-footer-meta">
-            <span>八個歷史遷徒節點</span>
+            <span>八个历史迁校节点</span>
             <i className="meta-dot">·</i>
             <span>
-              {content.storyline.config.decisionEventIds?.length ?? 10} 次求是抉擇
+              {content.storyline.config.decisionEventIds?.length ?? 10} 次求是抉择
             </span>
             <i className="meta-dot">·</i>
-            <span>純2D校史視覺小說</span>
+            <span>纯2D校史视觉小说</span>
           </div>
         </div>
       </div>

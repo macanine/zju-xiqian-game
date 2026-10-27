@@ -54,8 +54,8 @@ export function VNPassport({
           <div className="passport-title-wrap">
             <span className="passport-top-seal">牒</span>
             <div>
-              <h3>國立浙江大學西遷 · 通關路引印譜</h3>
-              <p>八大驛站朱砂官印 · 沿途五處駐地見聞手札</p>
+              <h3>国立浙江大学西迁 · 通关路引印谱</h3>
+              <p>八大驿站朱砂官印 · 沿途五处驻地见闻手札</p>
             </div>
           </div>
           <div className="passport-tab-switch">
@@ -130,7 +130,7 @@ export function VNPassport({
                 <div className="detail-meta-row">
                   <span className="detail-period-tag">{currentStamp.period}</span>
                   <span className={`detail-status-pill ${isStampUnlocked ? "is-ok" : "is-pending"}`}>
-                    {isStampUnlocked ? "已鈐印蓋章" : "征途尚未抵達"}
+                    {isStampUnlocked ? "已盖章" : "征途尚未抵达"}
                   </span>
                 </div>
 
@@ -145,11 +145,11 @@ export function VNPassport({
                 </div>
 
                 <div className="detail-epigraph-box">
-                  <span className="epigraph-title">求是行軍手札紀要：</span>
+                  <span className="epigraph-title">求是行军手札纪要：</span>
                   <p className="epigraph-content">
                     {isStampUnlocked
                       ? currentStamp.epigraph
-                      : "行軍先遣隊伍尚未踏入此站。隨隊伍前進完成此站歷史抉擇後，方可在此鈐蓋朱砂大印。"}
+                      : "行军先遣队伍尚未踏入此站。随队伍前进完成此站历史抉择后，方可在此钤盖朱砂大印。"}
                   </p>
                 </div>
               </div>
@@ -176,10 +176,10 @@ export function VNPassport({
                         <span className="wp-near-tag">{wp.stationNear}</span>
                       </div>
                       <p className="wp-snippet">
-                        {visited ? wp.fullStory : `${wp.snippet}（在西遷全圖上點擊探訪解鎖）`}
+                        {visited ? wp.fullStory : `${wp.snippet}（在西迁全图上点击探访解锁）`}
                       </p>
                       <div className="wp-bonus-tag">
-                        <span>史料收穫：</span>
+                        <span>史料收获：</span>
                         <b>{wp.bonus.label}</b>
                         <i>{wp.bonus.effect}</i>
                       </div>
@@ -192,7 +192,7 @@ export function VNPassport({
                           onSelectWaypoint(wp);
                         }}
                       >
-                        地圖探訪 ↗
+                        地图探访 ↗
                       </button>
                     )}
                   </div>
@@ -204,7 +204,7 @@ export function VNPassport({
 
         {/* Footer */}
         <div className="passport-footer">
-          <span>點擊任意處或按 ESC 鍵收起文牒</span>
+          <span>点击任意处或按 ESC 键收起文牒</span>
         </div>
       </div>
     </div>

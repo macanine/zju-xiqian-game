@@ -94,11 +94,9 @@ export function VNEventScreen({
   const title = item.kind === "location" ? item.event.title : item.event.name;
   const speakerMeta = resolutionStage
     ? {
-        name: "行軍決斷",
+        ...getSpeakerInfo(undefined, "行军决断"),
         badge: "手令裁定",
-        role: "國立浙江大學西遷手令",
-        seal: "令",
-        kind: "historical" as const,
+        role: "国立浙江大学西迁手令",
       }
     : currentDialogue
       ? resolveDialogueSpeaker(currentDialogue.speaker, currentDialogue.role)
@@ -148,38 +146,38 @@ export function VNEventScreen({
   // Major Historical Decrees Stamp Metadata
   const DECREE_MAP: Record<string, { seal: string; title: string; subtitle: string }> = {
     siku: {
-      seal: "文瀾護典",
-      title: "文瀾四庫 · 保全手令",
-      subtitle: "「典籍在，文脈存；千秋文瀾，誓死護送」",
+      seal: "文澜护典",
+      title: "文澜四库 · 保全手令",
+      subtitle: "「典籍在，文脉存；千秋文澜，誓死护送」",
     },
     dike: {
-      seal: "上田築堤",
-      title: "浙大長堤 · 防洪安民手令",
-      subtitle: "「工院技術，修筑安澜；军民同心，泽被后世」",
+      seal: "上田筑堤",
+      title: "浙大长堤 · 防洪安民手令",
+      subtitle: "「工院技术，修筑安澜；军民同心，泽被后世」",
     },
     anthem: {
-      seal: "求是校歌",
-      title: "求是校歌 · 馬一浮手稿立案",
+      seal: "校歌",
+      title: "求是校歌 · 马一浮手稿立案",
       subtitle: "「大不自多，海纳江河；求是校歌，唱彻黔桂」",
     },
     memorial: {
       seal: "松山沉哀",
-      title: "松山之痛 · 張俠魂追悼手令",
+      title: "松山之痛 · 张侠魂追悼手令",
       subtitle: "「国尔忘家，公而忘私；素车白马，永铭松山」",
     },
     debate: {
-      seal: "求是校訓",
-      title: "求是校訓 · 校務會議定案",
+      seal: "校训",
+      title: "求是校训 · 校务会议定案",
       subtitle: "「无求是难以立学，无创新难以图强」",
     },
     doubt: {
-      seal: "文軍先遣",
-      title: "江干啟運 · 新生先遣手令",
+      seal: "文军先遣",
+      title: "江干启运 · 新生先遣手令",
       subtitle: "「天目深山，保全火种；先遣列队，从容启行」",
     },
     cambridge: {
-      seal: "東方劍橋",
-      title: "東方劍橋 · 戰時科學高峰銘刻",
+      seal: "剑桥",
+      title: "东方剑桥 · 战时科学高峰铭刻",
       subtitle: "「李约瑟赞誉：战火中的奇迹，东方之剑桥」",
     },
   };
@@ -192,8 +190,8 @@ export function VNEventScreen({
     const narrative =
       choice.resolution ||
       (choice.outcomes
-        ? "命運之簽已定，隊伍隨機應變，破關前行。"
-        : "手令已下達，全體師生恪遵校令，堅毅向前。");
+        ? "命运之签已定，队伍随机应变，破关前行。"
+        : "手令已下达，全体师生恪遵校令，坚毅向前。");
 
     const decree = choice.flag ? DECREE_MAP[choice.flag] : null;
     if (decree) {
@@ -270,7 +268,7 @@ export function VNEventScreen({
       sound.playPageTurn();
       onChoice(
         choices[0] ?? {
-          label: "繼續前行",
+          label: "继续前行",
           outcomes: item.kind === "random" ? item.event.autoOutcomes : undefined,
         },
       );
@@ -377,12 +375,12 @@ export function VNEventScreen({
               e.stopPropagation();
               onViewImage(imagePath);
             }}
-            title="檢閱該歷史現場高清原檔大圖"
+            title="检阅该历史现场高清原档大图"
           >
             <img src={assetUrl(imagePath)} alt={title} />
             <div className="snapshot-seal-tag">
               <span className="tag-seal">影</span>
-              <span>檢閱原照</span>
+              <span>检阅原照</span>
             </div>
           </button>
         </div>
@@ -390,15 +388,16 @@ export function VNEventScreen({
 
       {/* Main Dialogue Box */}
       <div className={`vn-dialogue-box ${hideUI ? "is-hidden" : ""}`}>
-        {/* Speaker Badge and Identity Plate */}
+        {/* 头像只允许使用插画文件；禁止在头像容器内回退到印章文字。 */}
         <div className={`vn-speaker-badge speaker-theme-${speakerMeta.characterId || "default"}`}>
-          {speakerMeta.avatar ? (
+          {speakerMeta.avatar && (
             <div className="speaker-avatar-wrap">
-              <img src={speakerMeta.avatar} alt={speakerMeta.name} className="speaker-avatar-img" />
-              <span className="badge-seal">{speakerMeta.seal}</span>
+              <img
+                src={speakerMeta.avatar}
+                alt={speakerMeta.avatarAlt || speakerMeta.name}
+                className="speaker-avatar-img"
+              />
             </div>
-          ) : (
-            <div className="badge-seal">{speakerMeta.seal}</div>
           )}
           <div className="badge-names">
             <span className="speaker-name">{speakerMeta.name}</span>
@@ -422,9 +421,9 @@ export function VNEventScreen({
         <div className="vn-dialogue-content">
           <h2 className="event-kicker-title">
             {resolutionStage
-              ? "決策手令 · 歷史迴響"
+              ? "决策手令 · 历史回响"
               : inDialogue
-                ? `${title} · 對白 ${dialogueIndex + 1}/${dialogues.length}`
+                ? `${title} · 对白 ${dialogueIndex + 1}/${dialogues.length}`
                 : title}
           </h2>
 
@@ -432,7 +431,7 @@ export function VNEventScreen({
             <div className="vn-resolution-panel" onClick={(e) => e.stopPropagation()}>
               <div className="resolution-chosen-pill">
                 <span className="res-seal">令</span>
-                <span className="res-choice-label">已擬定手令：{resolutionStage.choice.label}</span>
+                <span className="res-choice-label">已拟定手令：{resolutionStage.choice.label}</span>
               </div>
 
               <p className="event-narrative-text">
@@ -462,7 +461,7 @@ export function VNEventScreen({
                 {resolutionStage.flag && (
                   <span className="res-flag-chip">
                     <span className="res-chip-seal">印</span>
-                    【銘刻史實印記 · {FLAG_LABELS[resolutionStage.flag] || resolutionStage.flag}】
+                      【铭刻史实印记 · {FLAG_LABELS[resolutionStage.flag] || resolutionStage.flag}】
                   </span>
                 )}
               </div>
@@ -479,7 +478,7 @@ export function VNEventScreen({
                       onChoice(resolutionStage.choice);
                     }}
                   >
-                    <span>定奪無悔 · 繼續西征</span>
+                    <span>定夺无悔 · 继续西征</span>
                     <span className="btn-arrow">➔</span>
                   </button>
                 </div>
@@ -508,7 +507,7 @@ export function VNEventScreen({
             </div>
             <div className="qte-prompt">
               <b>{qte?.prompt}</b>
-              <p>敵機空襲警報呼嘯！全體師生立即避險！</p>
+              <p>敌机空袭警报呼啸！全体师生立即避险！</p>
             </div>
             <button
               className="vn-qte-action-btn"
@@ -537,7 +536,7 @@ export function VNEventScreen({
           !inDialogue &&
           !resolutionStage && (
             <div className="vn-choices-deck" onClick={(e) => e.stopPropagation()}>
-              <div className="choices-prompt-tag">請定奪本節決策手令（按數字鍵或點擊）：</div>
+              <div className="choices-prompt-tag">请定夺本节决策手令（按数字键或点击）：</div>
               <div className="choices-grid">
                 {choices.map((choice, index) => (
                   <button
@@ -562,13 +561,13 @@ export function VNEventScreen({
         {/* Continuation Prompt when dialogue turns or non-interactive text completes */}
         {inDialogue && typingComplete && (
           <div className="vn-advance-prompt" onClick={handleAdvanceOrSkip}>
-            <span>點擊任意處、按空格或回車 推進對白（{dialogueIndex + 1}/{dialogues.length}）➔</span>
+            <span>点击任意处、按空格或回车 推进对白（{dialogueIndex + 1}/{dialogues.length}）➔</span>
           </div>
         )}
 
         {!inDialogue && !resolutionStage && autoAdvance && typingComplete && (
           <div className="vn-advance-prompt" onClick={handleAdvanceOrSkip}>
-            <span>點擊任意處、按空格或回車 繼續閱歷 ➔</span>
+            <span>点击任意处、按空格或回车 继续阅读 ➔</span>
           </div>
         )}
 
@@ -601,7 +600,7 @@ export function VNEventScreen({
             <h3 className="decree-title">{stampOverlay.title}</h3>
             <p className="decree-subtitle">{stampOverlay.subtitle}</p>
             <div className="decree-tag">
-              <span className="decree-ink-dot">●</span> 史實手令銘刻
+              <span className="decree-ink-dot">●</span> 史实手令铭刻
             </div>
           </div>
         </div>

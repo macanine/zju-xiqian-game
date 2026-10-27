@@ -28,7 +28,7 @@ export function ImageViewer({
       className="vn-photo-modal"
       role="dialog"
       aria-modal="true"
-      aria-label="檢閱歷史原圖"
+      aria-label="检阅历史原图"
       onClick={onClose}
     >
       <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
@@ -39,10 +39,10 @@ export function ImageViewer({
           <img src={assetUrl(path)} alt={imageCaption(path, content)} />
         </div>
         <div className="modal-caption-wrap">
-          <div className="caption-seal">原始檔案</div>
+          <div className="caption-seal">原始档案</div>
           <div>
             <h4>{imageCaption(path, content)}</h4>
-            <p>{imageLabel(path)} · 浙江大學西遷歷史檔案 · 原始影像翻拍</p>
+            <p>{imageLabel(path)} · 浙江大学西迁历史档案 · 原始影像翻拍</p>
           </div>
         </div>
       </div>

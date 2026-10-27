@@ -41,12 +41,12 @@ export const JOURNEY_LEGS: Record<string, JourneyLeg> = {
     toName: "江西 · 吉安",
     period: "民国二十六年底至二十七年初 · 1937—1938",
     distance: "行程七百五十二公里 · 徒步转进",
-    epigraph: "「杭州沦陷当日撤离建德，经金华、玉山、樟树抵吉安。时值隆冬，借白鹭洲书院与中学寒舍上课。」",
+    epigraph: "「杭州沦陷当日撤离建德，经金华、玉山、樟树抵达江西吉安。时值隆冬，借乡村师范和吉安中学寒假校舍上课。」",
     seal: "远涉",
     provinceRoute: "浙赣铁路沿线 ➔ 赣江流域",
   },
   "04-taihe": {
-    fromName: "吉安白鹭洲",
+    fromName: "江西 · 吉安",
     toName: "泰和 · 上田村",
     period: "民国二十七年二月 · 一九三八年二月",
     distance: "赣江水路与陆路并行",
@@ -60,7 +60,7 @@ export const JOURNEY_LEGS: Record<string, JourneyLeg> = {
     period: "民国二十七年八月 · 一九三八年八月",
     distance: "翻越南岭 · 千里跋涉",
     epigraph: "「大不自多，海纳江河。马一浮作校歌，竺可桢定求是校训。战火硝烟中确立浙大立身之本。」",
-    seal: "求是",
+    seal: "宜山",
     provinceRoute: "赣南 ➔ 湘桂山峦 ➔ 黔江之畔",
   },
   "06-zunyi-meitan": {

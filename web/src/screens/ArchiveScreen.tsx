@@ -46,17 +46,17 @@ export function ArchiveScreen({
       <div className="vn-archive-container">
         <div className="vn-archive-header">
           <div className="archive-title-wrap">
-            <span className="archive-seal">鑑</span>
+            <span className="archive-seal">鉴</span>
             <div>
-              <h2>西遷原始史料影像檔案閣</h2>
+              <h2>西迁原始史料影像档案阁</h2>
               <p>
-                共計收錄 {images.length} 張原始歷史照片 ·
-                每一幀皆為流亡歲月的如磐證據
+                共计收录 {images.length} 张原始历史照片 ·
+                每一帧皆为流亡岁月的如磐证据
               </p>
             </div>
           </div>
           <button className="vn-archive-back-btn" onClick={onBack}>
-            ← 返回校史長征
+            ← 返回校史长征
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export function ArchiveScreen({
                   alt={image.caption}
                   loading="lazy"
                 />
-                <div className="card-zoom-badge">⌕ 檢閱</div>
+                <div className="card-zoom-badge">⌕ 检阅</div>
               </div>
               <div className="card-caption-block">
                 <span className="card-group-tag">{image.group}</span>

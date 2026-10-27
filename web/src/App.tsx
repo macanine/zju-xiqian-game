@@ -117,8 +117,8 @@ export function App({ content }: AppProps): ReactElement {
         stage: node.name,
         speaker: `【沿途駐地探索】${wp.title}`,
         text: wp.fullStory,
-        choice: `收錄駐地手記（${wp.bonus.label}）`,
-        resolution: `行軍文牒增添朱砂印記：${wp.sealChar}`,
+        choice: `收录驻地手记（${wp.bonus.label}）`,
+        resolution: `行军文牒增添朱砂印记：${wp.sealChar}`,
       },
     ]);
   }
@@ -345,7 +345,7 @@ export function App({ content }: AppProps): ReactElement {
         result.resources,
         undefined,
         `${currentEvent.event.name} · ${result.log}`,
-        "自動檢點",
+        "自动检点",
       );
       return;
     }
@@ -359,7 +359,7 @@ export function App({ content }: AppProps): ReactElement {
     finishCurrentEvent(
       result.resources,
       result.flag,
-      `${result.log}${result.forcedRest ? " · 隊伍強制休整" : ""}`,
+      `${result.log}${result.forcedRest ? " · 队伍强制休整" : ""}`,
       choice.label,
     );
   }
