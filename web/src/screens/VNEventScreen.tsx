@@ -1,14 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactElement,
-} from "react";
-import {
-  assetUrl,
-  type Choice,
-  type ContentBundle,
-} from "../domain/content";
+import { useEffect, useRef, useState, type ReactElement } from "react";
+import { assetUrl, type Choice } from "../domain/content";
+import { DECREE_STAMPS } from "../domain/decrees";
 import type { Resources } from "../domain/rules";
 import { sound } from "../domain/audio";
 import { getSpeakerInfo, resolveDialogueSpeaker } from "../domain/speakers";
@@ -33,7 +25,6 @@ export function VNEventScreen({
   onViewImage,
   isBlocked = false,
 }: {
-  content: ContentBundle;
   session: Session;
   item: QueuedEvent;
   autoPlay: boolean;
@@ -50,8 +41,11 @@ export function VNEventScreen({
   const [skipRequested, setSkipRequested] = useState(false);
   const lastSkipTimeRef = useRef<number>(0);
   const isAdvancingRef = useRef(false);
+  const decreeTimerRef = useRef<number | null>(null);
+  const qteResolvedRef = useRef(false);
 
-  const dialogues = (item.kind === "location" ? item.event.dialogues : undefined) || [];
+  const dialogues =
+    (item.kind === "location" ? item.event.dialogues : undefined) || [];
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [resolutionStage, setResolutionStage] = useState<{
     choice: Choice;
@@ -72,6 +66,10 @@ export function VNEventScreen({
 
   // Reset completion state on new event
   useEffect(() => {
+    if (decreeTimerRef.current !== null) {
+      window.clearTimeout(decreeTimerRef.current);
+      decreeTimerRef.current = null;
+    }
     setDialogueIndex(0);
     setResolutionStage(null);
     setStampOverlay(null);
@@ -79,17 +77,25 @@ export function VNEventScreen({
     setSkipRequested(false);
     lastSkipTimeRef.current = 0;
     isAdvancingRef.current = false;
+    qteResolvedRef.current = false;
+
+    return () => {
+      if (decreeTimerRef.current !== null) {
+        window.clearTimeout(decreeTimerRef.current);
+      }
+    };
   }, [item.event.id, session.queueIndex]);
 
   const node = item.node;
   const event = item.event;
   const choices = event.choices;
-  const isQte = Boolean(item.kind === "random" && item.event.qte);
+  const isQte = item.kind === "random" && Boolean(item.event.qte);
   const qte = item.kind === "random" ? item.event.qte : undefined;
   const inDialogue = dialogueIndex < dialogues.length && !resolutionStage;
   const currentDialogue = inDialogue ? dialogues[dialogueIndex] : null;
   const hasMultipleChoices = choices.length > 1;
-  const autoAdvance = !hasMultipleChoices && !isQte && !inDialogue && !resolutionStage;
+  const autoAdvance =
+    !hasMultipleChoices && !isQte && !inDialogue && !resolutionStage;
 
   const title = item.kind === "location" ? item.event.title : item.event.name;
   const speakerMeta = resolutionStage
@@ -130,57 +136,17 @@ export function VNEventScreen({
         window.clearInterval(timer);
         setQteLeft(0);
         setQteDone(true);
+        if (qteResolvedRef.current) return;
+        qteResolvedRef.current = true;
         onChoice(
-          choices[1] ?? {
-            label: "隱蔽失敗",
-            effects: { supplies: -1 },
-          },
+          choices[1] ?? { label: "隱蔽失敗", effects: { supplies: -1 } },
         );
         return;
       }
       setQteLeft(left);
     }, 1000);
     return () => window.clearInterval(timer);
-  }, [item, isQte, qte, onChoice, choices]);
-
-  // Major Historical Decrees Stamp Metadata
-  const DECREE_MAP: Record<string, { seal: string; title: string; subtitle: string }> = {
-    siku: {
-      seal: "文澜护典",
-      title: "文澜四库 · 保全手令",
-      subtitle: "「典籍在，文脉存；千秋文澜，誓死护送」",
-    },
-    dike: {
-      seal: "上田筑堤",
-      title: "浙大长堤 · 防洪安民手令",
-      subtitle: "「工院技术，修筑安澜；军民同心，泽被后世」",
-    },
-    anthem: {
-      seal: "校歌",
-      title: "求是校歌 · 马一浮手稿立案",
-      subtitle: "「大不自多，海纳江河；求是校歌，唱彻黔桂」",
-    },
-    memorial: {
-      seal: "松山沉哀",
-      title: "松山之痛 · 张侠魂追悼手令",
-      subtitle: "「国尔忘家，公而忘私；素车白马，永铭松山」",
-    },
-    debate: {
-      seal: "校训",
-      title: "求是校训 · 校务会议定案",
-      subtitle: "「无求是难以立学，无创新难以图强」",
-    },
-    doubt: {
-      seal: "文军先遣",
-      title: "江干启运 · 新生先遣手令",
-      subtitle: "「天目深山，保全火种；先遣列队，从容启行」",
-    },
-    cambridge: {
-      seal: "剑桥",
-      title: "东方剑桥 · 战时科学高峰铭刻",
-      subtitle: "「李约瑟赞誉：战火中的奇迹，东方之剑桥」",
-    },
-  };
+  }, [item.event.id, isQte, qte, onChoice, choices]);
 
   // Choice Selection Trigger: Opens Historical Consequence & Echo Stage
   const handleSelectChoice = (choice: Choice) => {
@@ -193,11 +159,12 @@ export function VNEventScreen({
         ? "命运之签已定，队伍随机应变，破关前行。"
         : "手令已下达，全体师生恪遵校令，坚毅向前。");
 
-    const decree = choice.flag ? DECREE_MAP[choice.flag] : null;
+    const decree = choice.flag ? DECREE_STAMPS[choice.flag] : null;
     if (decree) {
       sound.playResonantSealStamp();
       setStampOverlay(decree);
-      window.setTimeout(() => {
+      decreeTimerRef.current = window.setTimeout(() => {
+        decreeTimerRef.current = null;
         setStampOverlay(null);
         setResolutionStage({
           choice,
@@ -269,7 +236,8 @@ export function VNEventScreen({
       onChoice(
         choices[0] ?? {
           label: "继续前行",
-          outcomes: item.kind === "random" ? item.event.autoOutcomes : undefined,
+          outcomes:
+            item.kind === "random" ? item.event.autoOutcomes : undefined,
         },
       );
     }
@@ -280,19 +248,34 @@ export function VNEventScreen({
     if (!autoPlay || !typingComplete || isQte || isBlocked) return;
     if (!inDialogue && !resolutionStage && hasMultipleChoices) return;
 
-    const timer = window.setTimeout(() => {
-      handleAdvanceOrSkip();
-    }, resolutionStage ? 2600 : inDialogue ? 1800 : 2200);
+    const timer = window.setTimeout(
+      () => {
+        handleAdvanceOrSkip();
+      },
+      resolutionStage ? 2600 : inDialogue ? 1800 : 2200,
+    );
 
     return () => window.clearTimeout(timer);
-  }, [autoPlay, typingComplete, isQte, isBlocked, inDialogue, resolutionStage, hasMultipleChoices]);
+  }, [
+    autoPlay,
+    typingComplete,
+    isQte,
+    isBlocked,
+    inDialogue,
+    resolutionStage,
+    hasMultipleChoices,
+  ]);
 
   // Keyboard navigation for desktop visual novel enthusiasts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isBlocked) return;
       if (e.repeat) return; // Ignore long-press repeats to prevent accidental skips
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
 
       // Blur active buttons so space doesn't re-trigger previous clicks
       if (document.activeElement instanceof HTMLButtonElement) {
@@ -334,7 +317,11 @@ export function VNEventScreen({
 
       // If still typing: ANY key (space, enter, letters, arrows) reveals full text instantly!
       if (!typingComplete) {
-        if (!["Shift", "Control", "Alt", "Meta", "Tab", "CapsLock"].includes(e.key)) {
+        if (
+          !["Shift", "Control", "Alt", "Meta", "Tab", "CapsLock"].includes(
+            e.key,
+          )
+        ) {
           e.preventDefault();
           handleAdvanceOrSkip();
           return;
@@ -389,7 +376,9 @@ export function VNEventScreen({
       {/* Main Dialogue Box */}
       <div className={`vn-dialogue-box ${hideUI ? "is-hidden" : ""}`}>
         {/* 头像只允许使用插画文件；禁止在头像容器内回退到印章文字。 */}
-        <div className={`vn-speaker-badge speaker-theme-${speakerMeta.characterId || "default"}`}>
+        <div
+          className={`vn-speaker-badge speaker-theme-${speakerMeta.characterId || "default"}`}
+        >
           {speakerMeta.avatar && (
             <div className="speaker-avatar-wrap">
               <img
@@ -428,10 +417,15 @@ export function VNEventScreen({
           </h2>
 
           {resolutionStage ? (
-            <div className="vn-resolution-panel" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="vn-resolution-panel"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="resolution-chosen-pill">
                 <span className="res-seal">令</span>
-                <span className="res-choice-label">已拟定手令：{resolutionStage.choice.label}</span>
+                <span className="res-choice-label">
+                  已拟定手令：{resolutionStage.choice.label}
+                </span>
               </div>
 
               <p className="event-narrative-text">
@@ -447,21 +441,28 @@ export function VNEventScreen({
 
               {/* Resource fluctuations & Flag badge */}
               <div className="resolution-effects-row">
-                {Object.entries(resolutionStage.choice.effects ?? {}).map(([resKey, delta]) => {
-                  const meta = resourceLabels[resKey as keyof Resources];
-                  if (!meta || delta === undefined) return null;
-                  const isPositive = delta > 0;
-                  return (
-                    <span key={resKey} className={`res-delta-chip ${isPositive ? "is-pos" : "is-neg"}`}>
-                      <span className="res-chip-seal">{meta.seal}</span>
-                      {meta.name} {isPositive ? `+${delta}` : delta}
-                    </span>
-                  );
-                })}
+                {Object.entries(resolutionStage.choice.effects ?? {}).map(
+                  ([resKey, delta]) => {
+                    const meta = resourceLabels[resKey as keyof Resources];
+                    if (!meta || delta === undefined) return null;
+                    const isPositive = delta > 0;
+                    return (
+                      <span
+                        key={resKey}
+                        className={`res-delta-chip ${isPositive ? "is-pos" : "is-neg"}`}
+                      >
+                        <span className="res-chip-seal">{meta.seal}</span>
+                        {meta.name} {isPositive ? `+${delta}` : delta}
+                      </span>
+                    );
+                  },
+                )}
                 {resolutionStage.flag && (
                   <span className="res-flag-chip">
                     <span className="res-chip-seal">印</span>
-                      【铭刻史实印记 · {FLAG_LABELS[resolutionStage.flag] || resolutionStage.flag}】
+                    【铭刻史实印记 ·{" "}
+                    {FLAG_LABELS[resolutionStage.flag] || resolutionStage.flag}
+                    】
                   </span>
                 )}
               </div>
@@ -500,7 +501,10 @@ export function VNEventScreen({
 
         {/* QTE Quick-Time Event Bar for Sudden Air Raids */}
         {isQte && (
-          <div className="vn-qte-action-bar" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="vn-qte-action-bar"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="qte-timer-pill">
               <span className="qte-num">{qteLeft}</span>
               <span className="qte-sec">秒</span>
@@ -515,6 +519,8 @@ export function VNEventScreen({
               onClick={(e) => {
                 (e.currentTarget as HTMLElement)?.blur();
                 setQteDone(true);
+                if (qteResolvedRef.current) return;
+                qteResolvedRef.current = true;
                 sound.playSealStamp();
                 onChoice(
                   choices[0] ?? {
@@ -535,8 +541,13 @@ export function VNEventScreen({
           typingComplete &&
           !inDialogue &&
           !resolutionStage && (
-            <div className="vn-choices-deck" onClick={(e) => e.stopPropagation()}>
-              <div className="choices-prompt-tag">请定夺本节决策手令（按数字键或点击）：</div>
+            <div
+              className="vn-choices-deck"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="choices-prompt-tag">
+                请定夺本节决策手令（按数字键或点击）：
+              </div>
               <div className="choices-grid">
                 {choices.map((choice, index) => (
                   <button
@@ -549,7 +560,9 @@ export function VNEventScreen({
                     </span>
                     <div className="choice-body">
                       <b className="choice-text">{choice.label}</b>
-                      {choice.note && <span className="choice-note">{choice.note}</span>}
+                      {choice.note && (
+                        <span className="choice-note">{choice.note}</span>
+                      )}
                     </div>
                     <span className="choice-seal-stamp">擬定</span>
                   </button>
@@ -561,7 +574,9 @@ export function VNEventScreen({
         {/* Continuation Prompt when dialogue turns or non-interactive text completes */}
         {inDialogue && typingComplete && (
           <div className="vn-advance-prompt" onClick={handleAdvanceOrSkip}>
-            <span>点击任意处、按空格或回车 推进对白（{dialogueIndex + 1}/{dialogues.length}）➔</span>
+            <span>
+              {`点击任意处、按空格或回车 推进对白（${dialogueIndex + 1}/${dialogues.length}）➔`}
+            </span>
           </div>
         )}
 

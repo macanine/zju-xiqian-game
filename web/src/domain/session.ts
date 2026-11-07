@@ -5,7 +5,12 @@ import type {
   RandomEvent,
   StoryNode,
 } from "./content";
-import { initialResources, type Resources } from "./rules";
+import {
+  initialResources,
+  randomAt,
+  selectWeightedEvent,
+  type Resources,
+} from "./rules";
 
 export const FLAG_LABELS: Record<string, string> = {
   doubt: "求是存亡之思",
@@ -27,7 +32,12 @@ export type QueuedEvent =
       photoIndex: number;
       interactive: boolean;
     }
-  | { kind: "random"; node: StoryNode; event: RandomEvent; interactive: boolean };
+  | {
+      kind: "random";
+      node: StoryNode;
+      event: RandomEvent;
+      interactive: boolean;
+    };
 
 export interface Session {
   seed: number;
@@ -80,9 +90,84 @@ export function isDecisionEvent(
   }
   const id = typeof event === "string" ? event : event.id;
   return Boolean(
-    content.storyline.config.decisionEventIds?.includes(id) ??
-      fallbackDecisionEventIds.has(id),
+    content.storyline.config.decisionEventIds?.includes(id) ||
+    fallbackDecisionEventIds.has(id),
   );
+}
+
+function queueRandomEvent(
+  node: StoryNode,
+  event: RandomEvent,
+  content: ContentBundle,
+): QueuedEvent {
+  return {
+    kind: "random",
+    node,
+    event,
+    interactive: isDecisionEvent(content, event),
+  };
+}
+
+/** Build the deterministic event queue for a station. */
+export function buildEventQueue(
+  content: ContentBundle,
+  node: StoryNode,
+  session: Pick<Session, "seed">,
+): QueuedEvent[] {
+  const fixedEventIds = new Set(node.teachingEvents ?? []);
+  const insertedFixedIds = new Set<string>();
+  const queue: QueuedEvent[] = [];
+
+  for (const [index, event] of (node.locationEvents ?? []).entries()) {
+    const isFixedMarker =
+      event.choices.length === 0 &&
+      Boolean(event.note) &&
+      fixedEventIds.size > 0;
+
+    if (!isFixedMarker) {
+      queue.push({
+        kind: "location",
+        node,
+        event,
+        interactive: isDecisionEvent(content, event),
+        photoIndex: node.images.length ? index % node.images.length : 0,
+      });
+    }
+
+    if (!event.note?.includes("固定触发")) continue;
+    for (const eventId of fixedEventIds) {
+      if (insertedFixedIds.has(eventId)) continue;
+      const fixedEvent = content.storyline.randomEvents.find(
+        (candidate) => candidate.id === eventId,
+      );
+      if (!fixedEvent) continue;
+      queue.push(queueRandomEvent(node, fixedEvent, content));
+      insertedFixedIds.add(eventId);
+    }
+  }
+
+  for (const eventId of fixedEventIds) {
+    if (insertedFixedIds.has(eventId)) continue;
+    const fixedEvent = content.storyline.randomEvents.find(
+      (candidate) => candidate.id === eventId,
+    );
+    if (fixedEvent) queue.push(queueRandomEvent(node, fixedEvent, content));
+  }
+
+  if (fixedEventIds.size > 0) return queue;
+
+  const shouldDraw =
+    randomAt(session.seed, node.order + 10) <
+    content.storyline.config.travel.randomEventChancePerLeg;
+  if (!shouldDraw) return queue;
+
+  const drawnEvent = selectWeightedEvent(
+    content.storyline.randomEvents,
+    node.id,
+    randomAt(session.seed, node.order + 30),
+  );
+  queue.push(queueRandomEvent(node, drawnEvent, content));
+  return queue;
 }
 
 export function newSession(content: ContentBundle): Session {

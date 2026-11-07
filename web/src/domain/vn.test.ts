@@ -147,7 +147,11 @@ describe("Visual Novel Narrative & Rules", () => {
 
     const step = resolveChoice(
       res,
-      { label: "运送四库全书", effects: { supplies: -1, morale: 15 }, flag: "siku" },
+      {
+        label: "运送四库全书",
+        effects: { supplies: -1, morale: 15 },
+        flag: "siku",
+      },
       mockStoryline,
     );
     expect(step.resources.supplies).toBe(24);
@@ -158,7 +162,11 @@ describe("Visual Novel Narrative & Rules", () => {
   it("evaluates ending conditions and epilogue fragments", () => {
     const res = initialResources(mockStoryline);
     const flags = new Set(["siku"]);
-    const ending = calculateEnding(mockStoryline, { ...res, morale: 75 }, flags);
+    const ending = calculateEnding(
+      mockStoryline,
+      { ...res, morale: 75 },
+      flags,
+    );
 
     expect(ending.card.id).toBe("card-high");
     expect(ending.card.title).toBe("弦歌不绝");
@@ -168,9 +176,13 @@ describe("Visual Novel Narrative & Rules", () => {
 
   it("verifies hz-02 and all multi-choice events have rich choices and are registered as decisions", async () => {
     const { CONTENT_BUNDLE } = await import("../data");
-    const decisionIds = new Set(CONTENT_BUNDLE.storyline.config.decisionEventIds ?? []);
+    const decisionIds = new Set(
+      CONTENT_BUNDLE.storyline.config.decisionEventIds ?? [],
+    );
 
-    const hangzhou = CONTENT_BUNDLE.storyline.nodes.find((n) => n.id === "prologue-hangzhou");
+    const hangzhou = CONTENT_BUNDLE.storyline.nodes.find(
+      (n) => n.id === "prologue-hangzhou",
+    );
     expect(hangzhou).toBeDefined();
 
     const hz02 = hangzhou?.locationEvents?.find((e) => e.id === "hz-02");
@@ -195,8 +207,13 @@ describe("Visual Novel Narrative & Rules", () => {
 
   it("initializes session state and validates decision event helper", async () => {
     const { CONTENT_BUNDLE } = await import("../data");
-    const { newSession, isDecisionEvent, FLAG_LABELS, resourceLabels } =
-      await import("./session");
+    const {
+      buildEventQueue,
+      newSession,
+      isDecisionEvent,
+      FLAG_LABELS,
+      resourceLabels,
+    } = await import("./session");
 
     const session = newSession(CONTENT_BUNDLE);
     expect(session.seed).toBe(19370924);
@@ -206,8 +223,23 @@ describe("Visual Novel Narrative & Rules", () => {
 
     expect(isDecisionEvent(CONTENT_BUNDLE, "hz-01")).toBe(true);
     expect(isDecisionEvent(CONTENT_BUNDLE, "hz-02")).toBe(true);
+    expect(isDecisionEvent(CONTENT_BUNDLE, "ja-01")).toBe(true);
     expect(FLAG_LABELS["siku"]).toContain("文澜");
     expect(resourceLabels.supplies.seal).toBe("典");
+
+    const jian = CONTENT_BUNDLE.storyline.nodes.find(
+      (node) => node.id === "03-jian",
+    );
+    expect(jian).toBeDefined();
+    const queue = buildEventQueue(
+      CONTENT_BUNDLE,
+      jian!,
+      newSession(CONTENT_BUNDLE),
+    );
+    expect(
+      queue
+        .filter((item) => item.kind === "random")
+        .map((item) => item.event.id),
+    ).toEqual(["re-airraid", "re-camp"]);
   });
 });
-

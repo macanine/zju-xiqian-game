@@ -1,20 +1,10 @@
+import { useEffect, useMemo, useState, type ReactElement } from "react";
+import type { Choice, ContentBundle, Effects } from "./domain/content";
 import {
-  useEffect,
-  useMemo,
-  useState,
-  type ReactElement,
-} from "react";
-import type {
-  Choice,
-  ContentBundle,
-  Effects,
-  StoryNode,
-} from "./domain/content";
-import {
+  applyEffects,
   calculateEnding,
   randomAt,
   resolveChoice,
-  selectWeightedEvent,
   type EndResult,
   type Resources,
 } from "./domain/rules";
@@ -27,13 +17,7 @@ import { JourneyTransition } from "./scene/JourneyTransition";
 import { getJourneyLeg, type JourneyLeg } from "./domain/journey";
 import type { WaypointStory } from "./domain/passport";
 import { preloadNodeImages } from "./domain/preloader";
-import {
-  isDecisionEvent,
-  newSession,
-  type QueuedEvent,
-  type Screen,
-  type Session,
-} from "./domain/session";
+import { buildEventQueue, newSession, type Screen } from "./domain/session";
 
 import { AppHeader } from "./components/AppHeader";
 import { ImageViewer } from "./components/ImageViewer";
@@ -84,30 +68,30 @@ export function App({ content }: AppProps): ReactElement {
     sound.playPageTurn();
     setTransitionLeg(null);
     setSession(newSession(content));
+    setViewerPath(null);
     setLastResolution(null);
+    setBacklogOpen(false);
     setLogs([]);
+    setAutoPlay(false);
+    setHideUI(false);
     setPassportOpen(false);
     setVisitedWaypoints(new Set());
     setScreen("home");
   }
 
   function handleVisitWaypoint(wp: WaypointStory): void {
+    if (visitedWaypoints.has(wp.id)) return;
     setVisitedWaypoints((prev) => new Set(prev).add(wp.id));
     if (wp.bonus.effects) {
       setSession((prev) => {
-        const updated = { ...prev.resources };
-        for (const [key, val] of Object.entries(wp.bonus.effects ?? {})) {
-          const k = key as keyof Resources;
-          const delta = val as number | undefined;
-          const cfg = content.storyline.config.resources[k];
-          if (cfg && typeof delta === "number") {
-            updated[k] = Math.max(
-              cfg.min,
-              Math.min(cfg.max, updated[k] + delta),
-            );
-          }
-        }
-        return { ...prev, resources: updated };
+        return {
+          ...prev,
+          resources: applyEffects(
+            prev.resources,
+            wp.bonus.effects ?? {},
+            content.storyline,
+          ),
+        };
       });
     }
     setLastResolution(`探訪${wp.title} · ${wp.bonus.label}`);
@@ -139,7 +123,9 @@ export function App({ content }: AppProps): ReactElement {
     sound.playSealStamp();
     const freshSession = newSession(content);
     const firstNode = content.storyline.nodes[0];
-    const queue = firstNode ? buildQueue(firstNode, freshSession) : [];
+    const queue = firstNode
+      ? buildEventQueue(content, firstNode, freshSession)
+      : [];
     setSession({ ...freshSession, queue });
     setLastResolution(null);
     setLogs([]);
@@ -149,82 +135,6 @@ export function App({ content }: AppProps): ReactElement {
     }
     setTransitionLeg(leg);
     setScreen("route");
-  }
-
-  function buildQueue(
-    targetNode: StoryNode,
-    nextSession: Session,
-  ): QueuedEvent[] {
-    const fixedIds = new Set(targetNode.teachingEvents ?? []);
-    const insertedFixedIds = new Set<string>();
-    const queue: QueuedEvent[] = [];
-    (targetNode.locationEvents ?? []).forEach((event, index) => {
-      const isMarker = !event.choices.length && event.note && fixedIds.size > 0;
-      if (!isMarker) {
-        queue.push({
-          kind: "location",
-          node: targetNode,
-          event,
-          interactive: isDecisionEvent(content, event),
-          photoIndex: targetNode.images.length
-            ? index % targetNode.images.length
-            : 0,
-        });
-      }
-      if (event.note?.includes("固定触发") && fixedIds.size) {
-        for (const eventId of fixedIds) {
-          const fixed = content.storyline.randomEvents.find(
-            (candidate) => candidate.id === eventId,
-          );
-          if (fixed)
-            queue.push({
-              kind: "random",
-              node: targetNode,
-              event: fixed,
-              interactive: isDecisionEvent(content, fixed),
-            });
-          insertedFixedIds.add(eventId);
-        }
-      }
-    });
-    for (const eventId of fixedIds) {
-      if (insertedFixedIds.has(eventId)) continue;
-      const fixed = content.storyline.randomEvents.find(
-        (candidate) => candidate.id === eventId,
-      );
-      if (fixed)
-        queue.push({
-          kind: "random",
-          node: targetNode,
-          event: fixed,
-          interactive: isDecisionEvent(content, fixed),
-        });
-    }
-
-    const shouldDraw = targetNode.teachingEvents?.length
-      ? false
-      : randomAt(nextSession.seed, targetNode.order + 10) <
-        content.storyline.config.travel.randomEventChancePerLeg;
-    const drawnEvent = shouldDraw
-      ? selectWeightedEvent(
-          content.storyline.randomEvents,
-          targetNode.id,
-          randomAt(nextSession.seed, targetNode.order + 30),
-        )
-      : null;
-    return [
-      ...queue,
-      ...(drawnEvent
-        ? [
-            {
-              kind: "random" as const,
-              node: targetNode,
-              event: drawnEvent,
-              interactive: isDecisionEvent(content, drawnEvent),
-            },
-          ]
-        : []),
-    ];
   }
 
   function enterNode(): void {
@@ -248,7 +158,7 @@ export function App({ content }: AppProps): ReactElement {
       setScreen("ending");
       return;
     }
-    const queue = buildQueue(target, session);
+    const queue = buildEventQueue(content, target, session);
     setSession((previous) => ({
       ...previous,
       resources,
@@ -422,7 +332,6 @@ export function App({ content }: AppProps): ReactElement {
         {screen === "event" && currentEvent && (
           <VNEventScreen
             key={`event-${session.nodeIndex}-${session.queueIndex}`}
-            content={content}
             session={session}
             item={currentEvent}
             autoPlay={autoPlay}
