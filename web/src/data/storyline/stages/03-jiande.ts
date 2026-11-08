@@ -22,7 +22,6 @@ export const jiandeNode: StoryNode = {
     {
       id: "jd-01",
       title: "江干码头 · 三批分航",
-      type: "timed",
       text: "一九三七年十一月，日军自金山卫登陆，杭州朝夕难保。江干码头汽笛哀鸣，全校七百余箱图书仪器限期起运，三批木船争分夺秒抢渡富春江。",
       dialogues: [
         {

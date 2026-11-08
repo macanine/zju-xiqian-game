@@ -117,6 +117,7 @@ export const yishanNode: StoryNode = {
         },
       ],
       choices: [],
+      fixedEventAnchor: true,
       note: "固定触发随机事件 re-disease，由该事件提供选项",
     },
   ],

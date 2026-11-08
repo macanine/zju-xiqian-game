@@ -77,9 +77,10 @@ export function resolveChoice(
   storyline: Storyline,
   randomValue = 0.5,
 ): Resolution {
-  let effects = choice.outcomes
+  const outcomeEffects = choice.outcomes
     ? pickOutcome(choice.outcomes, randomValue)
-    : (choice.effects ?? {});
+    : {};
+  let effects = mergeEffects(choice.effects ?? {}, outcomeEffects);
   const blocked = RESOURCE_KEYS.some((key) => {
     const amount = effects[key] ?? 0;
     return (

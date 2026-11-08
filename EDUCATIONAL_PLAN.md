@@ -197,7 +197,7 @@ TypeScript + React + Vite
 - 为三个 JSON 建立 TypeScript 类型。
 - 增加内容状态字段：confirmed、disputed、pending。
 - 为节点、事件、照片和时间轴建立稳定 ID。
-- 保留现有 validate.py，增加对内容状态和章节学习目标的检查。
+- 保留现有 `pnpm test` 数据校验，增加对内容状态和章节学习目标的检查。
 
 验收：所有章节可以从 JSON 加载，页面不硬编码史实文案。
 

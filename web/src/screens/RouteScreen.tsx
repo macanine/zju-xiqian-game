@@ -15,7 +15,6 @@ export function RouteScreen({
 }: {
   content: ContentBundle;
   session: Session;
-  lastResolution?: string | null;
   visitedWaypoints: Set<string>;
   onEnter: () => void;
   onArchive: () => void;

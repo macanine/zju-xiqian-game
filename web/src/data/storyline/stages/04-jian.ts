@@ -45,6 +45,7 @@ export const jianNode: StoryNode = {
             "师生以坚韧卓绝的毅力徒步跋涉七百五十二公里，战胜空袭险情与严寒，全校大队安抵江西吉安！",
         },
       ],
+      fixedEventAnchor: true,
       note: "本事件内固定触发 re-airraid 与 re-camp 各一次，用于教学",
     },
     {

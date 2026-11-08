@@ -6,6 +6,7 @@
     "dev": "pnpm --dir web dev",
     "build": "pnpm --dir web build",
     "typecheck": "pnpm --dir web typecheck",
+    "lint": "pnpm --dir web lint",
     "test": "pnpm --dir web test",
     "validate:data": "pnpm --dir web test"
   }

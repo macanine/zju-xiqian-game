@@ -9,8 +9,15 @@ export function HomeScreen({
   content: ContentBundle;
   onStart: () => void;
   onArchive: () => void;
-  onOpenPassport?: () => void;
 }): ReactElement {
+  const decisionCount = content.storyline.nodes.reduce(
+    (count, node) =>
+      count +
+      (node.locationEvents?.filter((event) => event.choices.length > 1)
+        .length ?? 0),
+    0,
+  );
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.repeat) return;
@@ -35,7 +42,7 @@ export function HomeScreen({
   return (
     <section className="vn-home-screen">
       <div className="vn-book-cover">
-          {/* 线装书缝线装饰 */}
+        {/* 线装书缝线装饰 */}
         <div className="vn-book-stitch" aria-hidden="true">
           <span />
           <span />
@@ -87,9 +94,7 @@ export function HomeScreen({
           <div className="vn-cover-footer-meta">
             <span>八个历史迁校节点</span>
             <i className="meta-dot">·</i>
-            <span>
-              {content.storyline.config.decisionEventIds?.length ?? 10} 次求是抉择
-            </span>
+            <span>{decisionCount} 次求是抉择</span>
             <i className="meta-dot">·</i>
             <span>纯2D校史视觉小说</span>
           </div>

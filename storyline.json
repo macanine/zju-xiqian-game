@@ -25,22 +25,8 @@
     "forcedRest": {
       "trigger": "health <= 0",
       "effects": { "health": 40, "ration": -3, "morale": -10 },
-      "skipLegs": 2,
       "note": "不做 Game Over，与「主线结局固定」一致"
     },
-    "decisionEventIds": [
-      "hz-01",
-      "xm-02",
-      "jd-02",
-      "ja-01",
-      "th-01",
-      "th-02",
-      "ys-02",
-      "zy-02",
-      "re-airraid",
-      "re-disease"
-    ],
-    "decisionRule": "Web 原型只停下来询问关键事件；其余事件采用首选项自动结算，保持旅途连续。",
     "photoRule": "照片只挂地点事件（locationEvents），随机事件不挂照片"
   },
 
@@ -211,7 +197,6 @@
         {
           "id": "jd-01",
           "title": "江干码头 · 三批分航",
-          "type": "timed",
           "text": "一九三七年十一月，日军自金山卫登陆，杭州朝夕难保。江干码头汽笛哀鸣，全校七百余箱图书仪器限期起运，三批木船争分夺秒抢渡富春江。",
           "dialogues": [
             { "speaker": "老戚", "role": "校工技师", "text": "敌军骑兵先头部队离余杭只有几十里了！最后一批木船如果今夜装不完，明日江面一旦被封锁，全校几十年的心血全完了！" },
@@ -317,6 +302,7 @@
               "resolution": "师生以坚韧卓绝的毅力徒步跋涉七百五十二公里，战胜空袭险情与严寒，全校大队安抵江西吉安！"
             }
           ],
+          "fixedEventAnchor": true,
           "note": "本事件内固定触发 re-airraid 与 re-camp 各一次，用于教学"
         },
         {
@@ -499,6 +485,7 @@
             { "speaker": "老戚", "role": "校工技师", "text": "当地老乡说后山深处有常山草药可以熬汤发汗，但药性极猛，搞不好会伤及元气……" }
           ],
           "choices": [],
+          "fixedEventAnchor": true,
           "note": "固定触发随机事件 re-disease，由该事件提供选项"
         }
       ]
@@ -594,6 +581,7 @@
             { "speaker": "周晚晴", "role": "文学院一年级", "text": "七年峥嵘岁月，五十多位未来的中科院院士在这片土地上诞生，黔北青山绿水养育了中国科学的参天大树。" }
           ],
           "choices": [],
+          "fixedEventAnchor": true,
           "note": "固定触发随机事件 re-aid（正面事件）"
         }
       ]
@@ -618,7 +606,6 @@
       "id": "re-airraid",
       "name": "空袭警报",
       "weight": 1.0,
-      "mechanic": "qte",
       "qte": { "windowSeconds": 3, "prompt": "敌机空袭！师生紧急疏散至路旁沟渠", "action": "点击「隐蔽」" },
       "text": "尖锐的警报声。屏幕在震。",
       "choices": [
@@ -644,9 +631,9 @@
       "id": "re-traffic",
       "name": "交通堵塞 / 车辆故障",
       "weight": 1.0,
-      "text": "车坏了，或者路堵死了。行程进度暂停一次。",
+      "text": "车坏了，或者路堵死了。消耗口粮后继续前行。",
       "choices": [
-        { "label": "等待修理", "effects": { "ration": -2 }, "penalty": "跳过 1 个行程段" },
+        { "label": "等待修理", "effects": { "ration": -2 } },
         { "label": "改走水路", "outcomes": [
           { "weight": 30, "effects": { "supplies": -2 } },
           { "weight": 70, "effects": {} }
@@ -675,15 +662,13 @@
       "autoOutcomes": [
         { "weight": 60, "effects": {} },
         { "weight": 40, "effects": { "supplies": -1 } }
-      ],
-      "modifier": "若持有标记 siku，则损失分支权重降为 30"
+      ]
     },
     {
       "id": "re-aid",
       "name": "当地援助",
       "weight": 1.0,
       "weightOverrides": { "06-zunyi-meitan": 2.0 },
-      "isPositive": true,
       "text": "湄潭百姓腾让出最好的房子，供给鱼米。",
       "choices": [
         { "label": "道谢并收下", "effects": { "ration": 3, "morale": 10, "health": 10 } }

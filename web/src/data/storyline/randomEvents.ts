@@ -5,7 +5,6 @@ export const RANDOM_EVENTS: RandomEvent[] = [
     id: "re-airraid",
     name: "空袭警报",
     weight: 1.0,
-    mechanic: "qte",
     qte: {
       windowSeconds: 3,
       prompt: "敌机空袭！师生紧急疏散至路旁沟渠",
@@ -43,12 +42,11 @@ export const RANDOM_EVENTS: RandomEvent[] = [
     id: "re-traffic",
     name: "交通堵塞 / 车辆故障",
     weight: 1.0,
-    text: "车坏了，或者路堵死了。行程进度暂停一次。",
+    text: "车坏了，或者路堵死了。消耗口粮后继续前行。",
     choices: [
       {
         label: "等待修理",
         effects: { ration: -2 },
-        penalty: "跳过 1 个行程段",
       },
       {
         label: "改走水路",
@@ -86,14 +84,12 @@ export const RANDOM_EVENTS: RandomEvent[] = [
       { weight: 60, effects: {} },
       { weight: 40, effects: { supplies: -1 } },
     ],
-    modifier: "若持有标记 siku，则损失分支权重降为 30",
   },
   {
     id: "re-aid",
     name: "当地援助",
     weight: 1.0,
     weightOverrides: { "06-zunyi-meitan": 2.0 },
-    isPositive: true,
     text: "湄潭百姓腾让出最好的房子，供给鱼米。",
     choices: [
       {

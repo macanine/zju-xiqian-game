@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
-import { assetUrl, imageCaption, type ContentBundle, type StoryNode } from "../domain/content";
+import {
+  assetUrl,
+  imageCaption,
+  type ContentBundle,
+  type StoryNode,
+} from "../domain/content";
 import journeyAmbience from "../assets/illustrations/journey_ambience.jpg";
 
 export interface VNStageProps {
@@ -29,7 +34,9 @@ export function VNStage({
     if (photoPath) return photoPath;
     if (node.images && node.images.length > 0) return node.images[0];
     if (node.backgroundHint) return node.backgroundHint;
-    const yishanHero = content.storyline.nodes.find((item) => item.id === "05-yishan")?.images[0];
+    const yishanHero = content.storyline.nodes.find(
+      (item) => item.id === "05-yishan",
+    )?.images[0];
     return yishanHero || "";
   }, [photoPath, node, content, isJianWithoutPhoto]);
 
@@ -39,16 +46,19 @@ export function VNStage({
   const [crossfading, setCrossfading] = useState(false);
 
   useEffect(() => {
-    if (resolvedPath && resolvedPath !== currentPath) {
-      setPreviousPath(currentPath);
-      setCurrentPath(resolvedPath);
-      setCrossfading(true);
-      const timer = window.setTimeout(() => {
-        setCrossfading(false);
-        setPreviousPath(null);
-      }, 750);
-      return () => window.clearTimeout(timer);
-    }
+    if (resolvedPath === currentPath) return;
+
+    const shouldCrossfade = Boolean(currentPath && resolvedPath);
+    setPreviousPath(shouldCrossfade ? currentPath : null);
+    setCurrentPath(resolvedPath);
+    setCrossfading(shouldCrossfade);
+
+    if (!shouldCrossfade) return;
+    const timer = window.setTimeout(() => {
+      setCrossfading(false);
+      setPreviousPath(null);
+    }, 750);
+    return () => window.clearTimeout(timer);
   }, [resolvedPath, currentPath]);
 
   const caption = currentPath ? imageCaption(currentPath, content) : "";

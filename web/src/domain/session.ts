@@ -8,7 +8,9 @@ import type {
 import {
   initialResources,
   randomAt,
+  resolveChoice,
   selectWeightedEvent,
+  type Resolution,
   type Resources,
 } from "./rules";
 
@@ -30,13 +32,11 @@ export type QueuedEvent =
       node: StoryNode;
       event: LocationEvent;
       photoIndex: number;
-      interactive: boolean;
     }
   | {
       kind: "random";
       node: StoryNode;
       event: RandomEvent;
-      interactive: boolean;
     };
 
 export interface Session {
@@ -59,52 +59,44 @@ export const resourceLabels: Record<
   morale: { name: "全校士气", seal: "志" },
 };
 
-export const fallbackDecisionEventIds = new Set([
-  "hz-01",
-  "hz-02",
-  "xm-01",
-  "xm-02",
-  "jd-01",
-  "jd-02",
-  "jd-03",
-  "ja-01",
-  "ja-02",
-  "th-01",
-  "th-02",
-  "ys-01",
-  "ys-02",
-  "zy-01",
-  "zy-02",
-  "re-airraid",
-  "re-disease",
-  "re-traffic",
-  "re-camp",
-]);
-
-export function isDecisionEvent(
-  content: ContentBundle,
-  event: { id: string; choices?: Choice[] } | string,
-): boolean {
-  if (typeof event === "object" && event.choices && event.choices.length > 1) {
-    return true;
-  }
-  const id = typeof event === "string" ? event : event.id;
-  return Boolean(
-    content.storyline.config.decisionEventIds?.includes(id) ||
-    fallbackDecisionEventIds.has(id),
-  );
-}
-
-function queueRandomEvent(
-  node: StoryNode,
-  event: RandomEvent,
-  content: ContentBundle,
-): QueuedEvent {
+function queueRandomEvent(node: StoryNode, event: RandomEvent): QueuedEvent {
   return {
     kind: "random",
     node,
     event,
-    interactive: isDecisionEvent(content, event),
+  };
+}
+
+export interface EventResolution {
+  result: Resolution;
+  choiceText: string;
+}
+
+/** Resolve an event without mutating session state, so the UI can preview it. */
+export function resolveQueuedChoice(
+  content: ContentBundle,
+  session: Pick<Session, "seed" | "resources" | "history" | "queueIndex">,
+  item: QueuedEvent,
+  choice: Choice,
+): EventResolution {
+  const isAutomaticRandomEvent =
+    item.kind === "random" && item.event.choices.length === 0;
+  const autoOutcomes =
+    item.kind === "random" ? (item.event.autoOutcomes ?? []) : [];
+  const resolvedChoice = isAutomaticRandomEvent
+    ? autoOutcomes.length > 0
+      ? { label: "抽签", outcomes: autoOutcomes }
+      : { label: "抽签", effects: {} }
+    : choice;
+  const result = resolveChoice(
+    session.resources,
+    resolvedChoice,
+    content.storyline,
+    randomAt(session.seed, session.history.length + session.queueIndex),
+  );
+  return {
+    result,
+    choiceText: isAutomaticRandomEvent ? "自动检点" : choice.label,
   };
 }
 
@@ -121,7 +113,7 @@ export function buildEventQueue(
   for (const [index, event] of (node.locationEvents ?? []).entries()) {
     const isFixedMarker =
       event.choices.length === 0 &&
-      Boolean(event.note) &&
+      event.fixedEventAnchor === true &&
       fixedEventIds.size > 0;
 
     if (!isFixedMarker) {
@@ -129,19 +121,18 @@ export function buildEventQueue(
         kind: "location",
         node,
         event,
-        interactive: isDecisionEvent(content, event),
         photoIndex: node.images.length ? index % node.images.length : 0,
       });
     }
 
-    if (!event.note?.includes("固定触发")) continue;
+    if (!event.fixedEventAnchor) continue;
     for (const eventId of fixedEventIds) {
       if (insertedFixedIds.has(eventId)) continue;
       const fixedEvent = content.storyline.randomEvents.find(
         (candidate) => candidate.id === eventId,
       );
       if (!fixedEvent) continue;
-      queue.push(queueRandomEvent(node, fixedEvent, content));
+      queue.push(queueRandomEvent(node, fixedEvent));
       insertedFixedIds.add(eventId);
     }
   }
@@ -151,7 +142,7 @@ export function buildEventQueue(
     const fixedEvent = content.storyline.randomEvents.find(
       (candidate) => candidate.id === eventId,
     );
-    if (fixedEvent) queue.push(queueRandomEvent(node, fixedEvent, content));
+    if (fixedEvent) queue.push(queueRandomEvent(node, fixedEvent));
   }
 
   if (fixedEventIds.size > 0) return queue;
@@ -166,7 +157,7 @@ export function buildEventQueue(
     node.id,
     randomAt(session.seed, node.order + 30),
   );
-  queue.push(queueRandomEvent(node, drawnEvent, content));
+  queue.push(queueRandomEvent(node, drawnEvent));
   return queue;
 }
 

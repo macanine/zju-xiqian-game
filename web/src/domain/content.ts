@@ -14,7 +14,6 @@ export interface Choice {
   flag?: string;
   outcomes?: Array<{ weight: number; effects: Effects }>;
   note?: string;
-  penalty?: string;
   resolution?: string;
 }
 
@@ -22,9 +21,9 @@ export interface LocationEvent {
   id: string;
   title: string;
   text: string;
-  type?: string;
   choices: Choice[];
   note?: string;
+  fixedEventAnchor?: boolean;
   dialogues?: EventDialogue[];
 }
 
@@ -53,13 +52,10 @@ export interface RandomEvent {
   name: string;
   weight: number;
   weightOverrides?: Record<string, number>;
-  mechanic?: string;
   qte?: QteConfig;
-  isPositive?: boolean;
   text: string;
   choices: Choice[];
   autoOutcomes?: Array<{ weight: number; effects: Effects }>;
-  modifier?: string;
 }
 
 export interface ResourceConfig {
@@ -74,6 +70,11 @@ export interface SiteImage {
   caption?: string;
 }
 
+export interface SiteEvent {
+  date: string;
+  text: string;
+}
+
 export interface Site {
   id: string;
   order: number;
@@ -81,7 +82,7 @@ export interface Site {
   place?: string;
   period?: { label?: string; start?: string; end?: string };
   summary?: string;
-  events?: unknown[];
+  events?: SiteEvent[];
   tags?: string[];
   images?: string[];
 }
@@ -105,7 +106,7 @@ export interface TimelineEntry {
   stageId: string | null;
   stage: string;
   text: string;
-  type: string;
+  type: "event" | "milestone" | "honor";
 }
 
 export interface TimelineData {
@@ -143,13 +144,11 @@ export interface Storyline {
       healthPerNode: number;
       randomEventChancePerLeg: number;
     };
-    forcedRest: { effects: Effects; skipLegs: number; note: string };
-    decisionEventIds?: string[];
-    decisionRule?: string;
+    forcedRest: { effects: Effects; note: string };
   };
   cast: {
     fictional: Array<{ id: string; name: string; role: string; bonus: string }>;
-    historical: unknown[];
+    historical: string[];
   };
   nodes: StoryNode[];
   randomEvents: RandomEvent[];
@@ -162,14 +161,8 @@ export interface ContentBundle {
   storyline: Storyline;
 }
 
-import { CONTENT_BUNDLE } from "../data";
-
 export function assetUrl(path: string): string {
   return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
-}
-
-export async function loadContent(): Promise<ContentBundle> {
-  return CONTENT_BUNDLE;
 }
 
 export function imageCaption(path: string, content: ContentBundle): string {

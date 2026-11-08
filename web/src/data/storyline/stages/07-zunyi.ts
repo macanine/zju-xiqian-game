@@ -128,6 +128,7 @@ export const zunyiMeitanNode: StoryNode = {
         },
       ],
       choices: [],
+      fixedEventAnchor: true,
       note: "固定触发随机事件 re-aid（正面事件）",
     },
   ],

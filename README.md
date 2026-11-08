@@ -5,7 +5,7 @@
 - 🎮 **MVP 故事线原型** → [`STORYLINE.md`](STORYLINE.md)（8 节点 / 17 个地点事件 / 6 个随机事件 / 6 种人物结局）
 - 📦 **机读数据** → `storyline.json`（节点 · 事件 · 选项 · 数值 · 结局判定）
 - 🧭 **工程化落地计划** → [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md)（技术路线、核心循环、里程碑、测试）
-- 🖥️ **Web 原型** → [`web/`](web/)（pnpm + TypeScript + React + Vite + Three.js）
+- 🖥️ **Web 原型** → [`web/`](web/)（pnpm + TypeScript + React + Vite）
 - 🏛️ **历史教育版计划** → [EDUCATIONAL_PLAN.md](EDUCATIONAL_PLAN.md)（教育目标、轻互动、展陈与课程落地）
 
 ## 素材来源
@@ -51,7 +51,7 @@ pnpm lint
 pnpm build
 ```
 
-`web/scripts/copy-assets.mjs` 会在开发和构建前将根目录的三份 JSON 与 `images/` 复制到临时静态目录；源数据仍只维护在仓库根目录。游戏从杭州开始，按 8 个节点推进到 1946 年终章。Three.js 常驻渲染路线地形、节点、雾层、粒子和史料影像，镜头沿路线连续推进；React DOM 负责清晰的文字、选择和档案 HUD。历史照片保留原始文件并支持查看大图，数据加载失败会显示错误页，不使用代码内史实备用文案。
+`web/scripts/copy-assets.mjs` 会在开发和构建前将根目录的 `images/` 复制到静态目录；游戏数据由 `web/src/data/` 的严格类型模块直接打包，根目录 JSON 作为机读导出文件保留。游戏从杭州开始，按 8 个节点推进到 1946 年终章。React DOM 负责路线图、文字、选择、音效和档案 HUD，历史照片支持查看大图，不使用代码内史实备用文案。
 
 ## 图片素材清单（共 25 张）
 

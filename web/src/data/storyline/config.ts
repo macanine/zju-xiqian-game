@@ -14,31 +14,8 @@ export const STORYLINE_CONFIG: Storyline["config"] = {
   },
   forcedRest: {
     effects: { health: 40, ration: -3, morale: -10 },
-    skipLegs: 2,
     note: "不做 Game Over，与「主线结局固定」一致",
   },
-  decisionEventIds: [
-    "hz-01",
-    "hz-02",
-    "xm-01",
-    "xm-02",
-    "jd-01",
-    "jd-02",
-    "jd-03",
-    "ja-02",
-    "th-01",
-    "th-02",
-    "ys-01",
-    "ys-02",
-    "zy-01",
-    "zy-02",
-    "re-airraid",
-    "re-disease",
-    "re-traffic",
-    "re-camp",
-  ],
-  decisionRule:
-    "包含多项抉择的事件均提供求是手令决策交互，其余叙事与单选项事件支持流式推进。",
 };
 
 export const STORYLINE_CAST: Storyline["cast"] = {

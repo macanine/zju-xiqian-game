@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { assetUrl, type Choice } from "../domain/content";
 import { DECREE_STAMPS } from "../domain/decrees";
-import type { Resources } from "../domain/rules";
+import { RESOURCE_KEYS, type Resolution } from "../domain/rules";
 import { sound } from "../domain/audio";
 import { getSpeakerInfo, resolveDialogueSpeaker } from "../domain/speakers";
 import { TypewriterText } from "../scene/TypewriterText";
@@ -22,6 +22,7 @@ export function VNEventScreen({
   onToggleAutoPlay,
   onOpenBacklog,
   onChoice,
+  onPreviewChoice,
   onViewImage,
   isBlocked = false,
 }: {
@@ -34,6 +35,7 @@ export function VNEventScreen({
   onToggleAutoPlay: () => void;
   onOpenBacklog: () => void;
   onChoice: (choice: Choice) => void;
+  onPreviewChoice: (choice: Choice) => Resolution;
   onViewImage: (path: string) => void;
   isBlocked?: boolean;
 }): ReactElement {
@@ -51,6 +53,7 @@ export function VNEventScreen({
     choice: Choice;
     narrative: string;
     flag?: string;
+    resolution: Resolution;
   } | null>(null);
 
   const [stampOverlay, setStampOverlay] = useState<{
@@ -158,6 +161,7 @@ export function VNEventScreen({
       (choice.outcomes
         ? "命运之签已定，队伍随机应变，破关前行。"
         : "手令已下达，全体师生恪遵校令，坚毅向前。");
+    const resolution = onPreviewChoice(choice);
 
     const decree = choice.flag ? DECREE_STAMPS[choice.flag] : null;
     if (decree) {
@@ -170,6 +174,7 @@ export function VNEventScreen({
           choice,
           narrative,
           flag: choice.flag,
+          resolution,
         });
         setTypingComplete(false);
         setSkipRequested(false);
@@ -182,6 +187,7 @@ export function VNEventScreen({
       choice,
       narrative,
       flag: choice.flag,
+      resolution,
     });
     setTypingComplete(false);
     setSkipRequested(false);
@@ -441,21 +447,28 @@ export function VNEventScreen({
 
               {/* Resource fluctuations & Flag badge */}
               <div className="resolution-effects-row">
-                {Object.entries(resolutionStage.choice.effects ?? {}).map(
-                  ([resKey, delta]) => {
-                    const meta = resourceLabels[resKey as keyof Resources];
-                    if (!meta || delta === undefined) return null;
-                    const isPositive = delta > 0;
-                    return (
-                      <span
-                        key={resKey}
-                        className={`res-delta-chip ${isPositive ? "is-pos" : "is-neg"}`}
-                      >
-                        <span className="res-chip-seal">{meta.seal}</span>
-                        {meta.name} {isPositive ? `+${delta}` : delta}
-                      </span>
-                    );
-                  },
+                {RESOURCE_KEYS.map((resKey) => {
+                  const meta = resourceLabels[resKey];
+                  const delta =
+                    resolutionStage.resolution.resources[resKey] -
+                    session.resources[resKey];
+                  if (!delta) return null;
+                  const isPositive = delta > 0;
+                  return (
+                    <span
+                      key={resKey}
+                      className={`res-delta-chip ${isPositive ? "is-pos" : "is-neg"}`}
+                    >
+                      <span className="res-chip-seal">{meta.seal}</span>
+                      {meta.name} {isPositive ? `+${delta}` : delta}
+                    </span>
+                  );
+                })}
+                {resolutionStage.resolution.forcedRest && (
+                  <span className="res-flag-chip">
+                    <span className="res-chip-seal">休</span>
+                    队伍强制休整
+                  </span>
                 )}
                 {resolutionStage.flag && (
                   <span className="res-flag-chip">

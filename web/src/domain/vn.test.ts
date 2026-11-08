@@ -100,7 +100,6 @@ describe("Visual Novel Narrative & Rules", () => {
       },
       forcedRest: {
         effects: { health: 40, ration: -3, morale: -10 },
-        skipLegs: 2,
         note: "休整",
       },
     },
@@ -159,6 +158,24 @@ describe("Visual Novel Narrative & Rules", () => {
     expect(step.flag).toBe("siku");
   });
 
+  it("combines base effects with a random outcome", async () => {
+    const { CONTENT_BUNDLE } = await import("../data");
+    const camp = CONTENT_BUNDLE.storyline.randomEvents.find(
+      (event) => event.id === "re-camp",
+    );
+    const choice = camp?.choices[0];
+    expect(choice).toBeDefined();
+
+    const current = { ...initialResources(mockStoryline), health: 80 };
+    const risky = resolveChoice(current, choice!, mockStoryline, 0.1);
+    const calm = resolveChoice(current, choice!, mockStoryline, 0.9);
+
+    expect(risky.resources.health).toBe(85);
+    expect(risky.resources.morale).toBe(55);
+    expect(calm.resources.health).toBe(85);
+    expect(calm.resources.morale).toBe(60);
+  });
+
   it("evaluates ending conditions and epilogue fragments", () => {
     const res = initialResources(mockStoryline);
     const flags = new Set(["siku"]);
@@ -174,11 +191,8 @@ describe("Visual Novel Narrative & Rules", () => {
     expect(ending.fragments[0].flag).toBe("siku");
   });
 
-  it("verifies hz-02 and all multi-choice events have rich choices and are registered as decisions", async () => {
+  it("verifies multi-choice events have rich choices", async () => {
     const { CONTENT_BUNDLE } = await import("../data");
-    const decisionIds = new Set(
-      CONTENT_BUNDLE.storyline.config.decisionEventIds ?? [],
-    );
 
     const hangzhou = CONTENT_BUNDLE.storyline.nodes.find(
       (n) => n.id === "prologue-hangzhou",
@@ -188,14 +202,12 @@ describe("Visual Novel Narrative & Rules", () => {
     const hz02 = hangzhou?.locationEvents?.find((e) => e.id === "hz-02");
     expect(hz02).toBeDefined();
     expect(hz02?.choices.length).toBe(2);
-    expect(decisionIds.has("hz-02")).toBe(true);
     expect(hz02?.dialogues && hz02.dialogues.length > 0).toBe(true);
 
-    // Verify all multi-choice location events are in decisionIds and have resolution texts
+    // Verify every multi-choice event has a resolution for the confirmation panel.
     for (const node of CONTENT_BUNDLE.storyline.nodes) {
       for (const event of node.locationEvents ?? []) {
         if (event.choices.length > 1) {
-          expect(decisionIds.has(event.id)).toBe(true);
           for (const choice of event.choices) {
             expect(choice.label).toBeTruthy();
             expect(choice.resolution).toBeTruthy();
@@ -205,15 +217,10 @@ describe("Visual Novel Narrative & Rules", () => {
     }
   });
 
-  it("initializes session state and validates decision event helper", async () => {
+  it("initializes session state and builds fixed teaching events", async () => {
     const { CONTENT_BUNDLE } = await import("../data");
-    const {
-      buildEventQueue,
-      newSession,
-      isDecisionEvent,
-      FLAG_LABELS,
-      resourceLabels,
-    } = await import("./session");
+    const { buildEventQueue, newSession, FLAG_LABELS, resourceLabels } =
+      await import("./session");
 
     const session = newSession(CONTENT_BUNDLE);
     expect(session.seed).toBe(19370924);
@@ -221,9 +228,6 @@ describe("Visual Novel Narrative & Rules", () => {
     expect(session.resources.supplies).toBe(25);
     expect(session.flags.size).toBe(0);
 
-    expect(isDecisionEvent(CONTENT_BUNDLE, "hz-01")).toBe(true);
-    expect(isDecisionEvent(CONTENT_BUNDLE, "hz-02")).toBe(true);
-    expect(isDecisionEvent(CONTENT_BUNDLE, "ja-01")).toBe(true);
     expect(FLAG_LABELS["siku"]).toContain("文澜");
     expect(resourceLabels.supplies.seal).toBe("典");
 

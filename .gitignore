@@ -7,7 +7,6 @@ dist/
 web/dist/
 
 # Auto-copied public assets
-web/public/data/
 web/public/images/
 web/public/.asset-copy-stamp
 
@@ -18,3 +17,8 @@ backups/
 *.log
 .env*
 .wrangler/
+
+# Local export and packaging artifacts
+output/
+tmp/
+*.zip

@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { CONTENT_BUNDLE, SITES_DATA, TIMELINE_DATA, STORYLINE_DATA } from "./index";
+import {
+  CONTENT_BUNDLE,
+  SITES_DATA,
+  TIMELINE_DATA,
+  STORYLINE_DATA,
+} from "./index";
 
 const projectRoot = resolve(__dirname, "../../../");
 
@@ -33,6 +38,39 @@ describe("Modular Data Engineering & Integrity Verification", () => {
     STORYLINE_DATA.nodes.forEach((node, index) => {
       expect(node.order).toBe(index);
     });
+  });
+
+  it("validates fixed event anchors and probability weights", () => {
+    const randomIds = new Set(
+      STORYLINE_DATA.randomEvents.map((event) => event.id),
+    );
+
+    for (const node of STORYLINE_DATA.nodes) {
+      for (const eventId of node.teachingEvents ?? []) {
+        expect(randomIds.has(eventId)).toBe(true);
+      }
+      if ((node.teachingEvents ?? []).length > 0) {
+        expect(
+          node.locationEvents?.some((event) => event.fixedEventAnchor),
+        ).toBe(true);
+      }
+    }
+
+    for (const event of STORYLINE_DATA.randomEvents) {
+      for (const choice of event.choices) {
+        if (!choice.outcomes) continue;
+        expect(choice.outcomes.length).toBeGreaterThan(0);
+        expect(choice.outcomes.every((outcome) => outcome.weight > 0)).toBe(
+          true,
+        );
+      }
+      if (event.autoOutcomes) {
+        expect(event.autoOutcomes.length).toBeGreaterThan(0);
+        expect(event.autoOutcomes.every((outcome) => outcome.weight > 0)).toBe(
+          true,
+        );
+      }
+    }
   });
 
   it("strictly enforces allowed resource effect keys", () => {
@@ -136,7 +174,9 @@ describe("Modular Data Engineering & Integrity Verification", () => {
 
     // Verify images/ folder has no orphaned unreferenced images
     const imagesDir = resolve(projectRoot, "images");
-    const onDiskFiles = readdirSync(imagesDir).filter((f) => !f.startsWith("."));
+    const onDiskFiles = readdirSync(imagesDir).filter(
+      (f) => !f.startsWith("."),
+    );
     for (const file of onDiskFiles) {
       expect(referencedImages.has(`images/${file}`)).toBe(true);
     }
